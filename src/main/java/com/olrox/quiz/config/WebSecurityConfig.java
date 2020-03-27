@@ -1,6 +1,6 @@
 package com.olrox.quiz.config;
 
-import com.olrox.sweater.service.UserService;
+import com.olrox.quiz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
