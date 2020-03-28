@@ -38,7 +38,7 @@
                 <label class="label" for="password">Password</label>
                 <div class="control has-icons-left has-icons-right">
                     <input class="input ${(passwordError??)?string('is-danger', '')}" type="password" id="password"
-                           name="password">
+                           name="password" placeholder="Password">
                     <span class="icon is-small is-left">
                         <i class="fas fa-key"></i>
                     </span>
@@ -55,7 +55,7 @@
                 <label class="label" for="passwordRepeat">Repeat password</label>
                 <div class="control has-icons-left has-icons-right">
                     <input class="input ${(passwordError??)?string('is-danger', '')}" type="password"
-                           id="passwordRepeat" name="passwordRepeat">
+                           id="passwordRepeat" name="passwordRepeat" placeholder="Password">
                     <span class="icon is-small is-left">
                         <i class="fas fa-key"></i>
                     </span>

@@ -2,7 +2,7 @@
 <nav class="navbar is-primary"></nav>
 <nav class="navbar is-primary is-fixed-top">
     <div class="navbar-brand">
-        <a class="navbar-item" href="/main">
+        <a class="navbar-item" href="/">
             <img src="https://github.com/misterOlrox/QuizImages/blob/master/logo.jpg?raw=true" alt="Logo"
                  width="35" height="35">
         </a>
@@ -53,11 +53,14 @@
             <div class="navbar-item">
                 <div class="field is-grouped">
                     <#if user?? && user.isActive()>
-                        <p class="control">
-                            <a class="bd-tw-button button" href="/sign-out">
-                                Sign Out
-                            </a>
-                        </p>
+                        <form action="/logout" method="post">
+                            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
+                            <p class="control">
+                                <button class="bd-tw-button button is-primary" type="submit">
+                                    Sign Out
+                                </button>
+                            </p>
+                        </form>
                     <#else>
                         <p class="control">
                             <a class="bd-tw-button button is-primary" href="/login">
