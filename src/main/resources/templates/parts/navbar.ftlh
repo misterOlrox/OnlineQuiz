@@ -1,9 +1,6 @@
-<!DOCTYPE html>
+<#include "security.ftlh">
 
-<html xmlns:th="http://www.thymeleaf.org" >
-
-<body>
-<nav class="navbar is-primary is-fixed-top" th:fragment="main-navbar">
+<nav class="navbar is-primary is-fixed-top">
     <div class="navbar-brand">
         <a class="navbar-item" href="/main">
             <img src="https://github.com/misterOlrox/QuizImages/blob/master/logo.jpg?raw=true" alt="Logo"
@@ -81,7 +78,3 @@
         </div>
     </div>
 </nav>
-
-<div style="margin-top: 20%; margin-bottom: 20%"></div>
-</body>
-</html>
