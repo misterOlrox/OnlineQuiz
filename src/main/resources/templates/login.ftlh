@@ -1,14 +1,18 @@
 <#import "parts/common.ftlh" as c>
 
 <@c.page>
-    <section class="hero is-small is-bold">
+    <section class="hero is-small ${(signUpSuccessful??)?string('is-success', '')}" style="margin-bottom: 5%">
         <div class="hero-body">
             <div class="container has-text-centered">
                 <h1 class="title">
                     Login
                 </h1>
                 <h2 class="subtitle">
+                <#if signUpSuccessful??>
+                    You are successfully registered. Enter your username and password
+                <#else>
                     Enter your username and password
+                </#if>
                 </h2>
             </div>
         </div>

@@ -12,7 +12,7 @@
     </head>
     <body>
     <#include "navbar.ftlh">
-    <div class="bd-content" style="margin-bottom: 4%; margin-top: 6%">
+    <div class="bd-content" style="margin-bottom: 4%; margin-top: 3%">
         <div class="content">
             <#nested>
         </div>

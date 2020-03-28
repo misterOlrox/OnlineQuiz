@@ -51,11 +51,13 @@ public class UserService implements UserDetailsService {
             return false;
         }
 
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        User newUser = new User();
+        newUser.setUsername(user.getUsername());
+        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setActive(true);
+        newUser.setRoles(Collections.singleton(Role.USER));
 
-        userRepository.save(user);
+        userRepository.save(newUser);
 
         return true;
     }

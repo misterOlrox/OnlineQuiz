@@ -1,7 +1,7 @@
 <#import "parts/common.ftlh" as c>
 
 <@c.page>
-    <section class="hero is-small is-bold">
+    <section class="hero is-small is-bold" style="margin-bottom: 5%">
         <div class="hero-body">
             <div class="container has-text-centered">
                 <h1 class="title">
@@ -23,42 +23,52 @@
                     <input type="text" id="username" name="username" autofocus="autofocus" class="input"
                            placeholder="Username">
                     <span class="icon is-small is-left">
-      <i class="fas fa-user"></i>
-    </span>
-                    <span class="icon is-small is-right">
-      <i class="fas fa-check"></i>
-    </span>
+                        <i class="fas fa-user"></i>
+                    </span>
                 </div>
 
-                <p class="help is-success">This username is available</p>
+                <#if usernameError??>
+                    <p class="help is-danger">
+                        ${usernameError}
+                    </p>
+                </#if>
             </div>
 
             <div class="field">
                 <label class="label" for="password">Password</label>
                 <div class="control has-icons-left has-icons-right">
-                    <input class="input" type="password" id="password" name="password">
+                    <input class="input ${(passwordError??)?string('is-danger', '')}" type="password" id="password"
+                           name="password">
                     <span class="icon is-small is-left">
-      <i class="fas fa-key"></i>
-    </span>
-                    <span class="icon is-small is-right">
-      <i class="fas fa-exclamation-triangle"></i>
-    </span>
+                        <i class="fas fa-key"></i>
+                    </span>
                 </div>
+
+                <#if passwordError??>
+                    <p class="help is-danger">
+                        ${passwordError}
+                    </p>
+                </#if>
             </div>
 
             <div class="field">
                 <label class="label" for="passwordRepeat">Repeat password</label>
                 <div class="control has-icons-left has-icons-right">
-                    <input class="input is-danger" type="password" id="passwordRepeat" name="passwordRepeat">
+                    <input class="input ${(passwordError??)?string('is-danger', '')}" type="password"
+                           id="passwordRepeat" name="passwordRepeat">
                     <span class="icon is-small is-left">
-      <i class="fas fa-key"></i>
-    </span>
-                    <span class="icon is-small is-right">
-      <i class="fas fa-exclamation-triangle"></i>
-    </span>
+                        <i class="fas fa-key"></i>
+                    </span>
                 </div>
+
+                <#if passwordRepeatError??>
+                    <p class="help is-danger">
+                        ${passwordRepeatError}
+                    </p>
+                </#if>
             </div>
 
+            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
             <div class="container has-text-centered" style="margin-top: 5%">
                 <input class="button is-link is-rounded is-medium" type="submit" value="Sign up"/>
             </div>

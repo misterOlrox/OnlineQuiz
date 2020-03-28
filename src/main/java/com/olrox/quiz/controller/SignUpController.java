@@ -36,27 +36,27 @@ public class SignUpController {
             BindingResult bindingResult,
             Model model) {
 
-        boolean isConfirmEmpty = StringUtils.isEmpty(passwordConfirmation);
+        boolean anyError = false;
+        final boolean isConfirmEmpty = StringUtils.isEmpty(passwordConfirmation);
 
         if (isConfirmEmpty) {
             model.addAttribute("passwordRepeatError", "Password confirmation can't be empty");
+            anyError = true;
         }
-
         if (user.getPassword() != null && !user.getPassword().equals(passwordConfirmation)) {
             model.addAttribute("passwordError", "Passwords are not equal!");
+            anyError = true;
         }
-
-        if (isConfirmEmpty || bindingResult.hasErrors()) {
+        if (userService.isUsernameBusy(user.getUsername())) {
+            model.addAttribute("usernameError", "Username is busy!");
+            anyError = true;
+        }
+        if (anyError || bindingResult.hasErrors()) {
             Map<String, String> errors = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errors);
 
             return "sign-up";
         }
-
-        if (userService.isUsernameBusy(user.getUsername())) {
-            model.addAttribute("usernameError", "Username is busy!");
-        }
-
         if (!userService.addUser(user)) {
             model.addAttribute("usernameError", "Username is busy!");
             return "sign-up";
@@ -64,6 +64,6 @@ public class SignUpController {
 
         model.addAttribute("signUpSuccessful", true);
 
-        return "redirect:/login";
+        return "/login";
     }
 }
