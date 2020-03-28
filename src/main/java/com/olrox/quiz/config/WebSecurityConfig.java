@@ -1,5 +1,6 @@
 package com.olrox.quiz.config;
 
+import com.olrox.quiz.entity.Role;
 import com.olrox.quiz.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +47,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/sign-up", "/static/**", "/activate/*").permitAll()
+                .antMatchers("/", "/static/**", "/activate/*").permitAll()
+                .antMatchers("/sign-up").not().authenticated()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
