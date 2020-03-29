@@ -1,12 +1,16 @@
 package com.olrox.quiz.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "quiz_question_theme")
@@ -15,8 +19,32 @@ public class QuizQuestionTheme {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String theme;
+    private String themeName;
 
-    @OneToMany
-    private List<QuizQuestion> questions;
+    @ManyToMany(mappedBy = "themes")
+    private Set<QuizQuestion> questions = new HashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getThemeName() {
+        return themeName;
+    }
+
+    public void setThemeName(String themeName) {
+        this.themeName = themeName;
+    }
+
+    public Set<QuizQuestion> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(Set<QuizQuestion> questions) {
+        this.questions = questions;
+    }
 }

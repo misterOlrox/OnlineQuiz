@@ -57,7 +57,7 @@ public class SignUpController {
 
             return "sign-up";
         }
-        if (!userService.addUser(user)) {
+        if (userService.signUp(user.getUsername(), user.getPassword()) == null) {
             model.addAttribute("usernameError", "Username is busy!");
             return "sign-up";
         }

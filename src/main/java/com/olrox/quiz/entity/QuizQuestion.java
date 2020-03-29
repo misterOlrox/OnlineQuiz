@@ -6,11 +6,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -34,8 +36,11 @@ public class QuizQuestion {
     @ManyToMany
     private Set<User> approvals;
 
-    @ManyToOne
-    public QuizQuestionTheme theme;
+    @ManyToMany
+    @JoinTable(name = "quiz_question_join_themes",
+            joinColumns = @JoinColumn(name = "quiz_question_id"),
+            inverseJoinColumns = @JoinColumn(name = "theme_id"))
+    public Set<QuizQuestionTheme> themes = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -95,5 +100,18 @@ public class QuizQuestion {
 
     public void setApprovals(Set<User> approvals) {
         this.approvals = approvals;
+    }
+
+    public Set<QuizQuestionTheme> getThemes() {
+        return themes;
+    }
+
+    public void addTheme(QuizQuestionTheme theme) {
+        getThemes().add(theme);
+        theme.getQuestions().add(this);
+    }
+
+    public void setThemes(Set<QuizQuestionTheme> theme) {
+        this.themes = theme;
     }
 }

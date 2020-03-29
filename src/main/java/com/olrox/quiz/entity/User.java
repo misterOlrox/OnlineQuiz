@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -33,6 +34,7 @@ public class User implements UserDetails {
     private Long id;
 
     @NotBlank(message = "Username can't be empty")
+    @Column(unique = true)
     private String username;
 
     @NotBlank(message = "Password can't be empty")

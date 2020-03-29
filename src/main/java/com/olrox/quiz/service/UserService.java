@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,22 +50,24 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-    public boolean addUser(User user) {
-        User userFromDb = userRepository.findByUsername(user.getUsername());
+    public User signUp(String username, String password) {
+        User userFromDb = userRepository.findByUsername(username);
 
         if (userFromDb != null) {
-            return false;
+            return null;
         }
 
         User newUser = new User();
-        newUser.setUsername(user.getUsername());
-        newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        newUser.setUsername(username);
+        newUser.setPassword(passwordEncoder.encode(password));
         newUser.setActive(true);
         newUser.setRoles(Collections.singleton(Role.USER));
 
-        userRepository.save(newUser);
+        return userRepository.save(newUser);
+    }
 
-        return true;
+    public User addUser(User user) {
+        return userRepository.save(user);
     }
 
     public List<User> findAll() {
@@ -95,5 +98,20 @@ public class UserService implements UserDetailsService {
         }
 
         userRepository.save(user);
+    }
+
+    public User findAdmin() {
+        Long adminId = userRepository.findAdminId();
+        if (adminId == null) {
+            return null;
+        }
+        Optional<User> optionalUser = userRepository.findById(adminId);
+        return optionalUser.orElse(null);
+    }
+
+    public User updateRoles(User user, Set<Role> roles) {
+        user.setRoles(roles);
+
+        return userRepository.save(user);
     }
 }
