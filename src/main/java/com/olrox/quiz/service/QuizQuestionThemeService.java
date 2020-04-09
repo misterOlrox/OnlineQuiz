@@ -5,6 +5,8 @@ import com.olrox.quiz.repository.QuizQuestionThemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class QuizQuestionThemeService {
 
@@ -13,6 +15,10 @@ public class QuizQuestionThemeService {
 
     public QuizQuestionTheme add(QuizQuestionTheme theme) {
         return quizQuestionThemeRepository.save(theme);
+    }
+
+    public List<QuizQuestionTheme> getAllThemes() {
+        return quizQuestionThemeRepository.findAll();
     }
 
 }

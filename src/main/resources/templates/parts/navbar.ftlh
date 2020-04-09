@@ -15,25 +15,18 @@
 
     <div id="navbarExampleTransparentExample" class="navbar-menu">
         <div class="navbar-start">
-            <a class="navbar-item" href="https://bulma.io/">
-                Home
+            <#if user??>
+            <a class="navbar-item" href="user/profile">
+                Profile
             </a>
+            </#if>
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link" href="https://bulma.io/documentation/overview/start/">
-                    Docs
+                    Quiz
                 </a>
                 <div class="navbar-dropdown is-boxed">
-                    <a class="navbar-item" href="https://bulma.io/documentation/overview/start/">
-                        Overview
-                    </a>
-                    <a class="navbar-item" href="https://bulma.io/documentation/modifiers/syntax/">
-                        Modifiers
-                    </a>
-                    <a class="navbar-item" href="https://bulma.io/documentation/columns/basics/">
-                        Columns
-                    </a>
-                    <a class="navbar-item" href="https://bulma.io/documentation/layout/container/">
-                        Layout
+                    <a class="navbar-item" href="/intro/solo">
+                        Solo
                     </a>
                     <a class="navbar-item" href="https://bulma.io/documentation/form/general/">
                         Form
@@ -69,7 +62,7 @@
                         </p>
                         <p class="control">
                             <a class="button" href="/sign-up">
-                                Sing Up
+                                Sign Up
                             </a>
                         </p>
                     </#if>
@@ -78,3 +71,30 @@
         </div>
     </div>
 </nav>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // Get all "navbar-burger" elements
+        const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+        // Check if there are any navbar burgers
+        if ($navbarBurgers.length > 0) {
+
+            // Add a click event on each of them
+            $navbarBurgers.forEach( el => {
+                el.addEventListener('click', () => {
+
+                    // Get the target from the "data-target" attribute
+                    const target = el.dataset.target;
+                    const $target = document.getElementById(target);
+
+                    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                    el.classList.toggle('is-active');
+                    $target.classList.toggle('is-active');
+
+                });
+            });
+        }
+
+    });
+</script>

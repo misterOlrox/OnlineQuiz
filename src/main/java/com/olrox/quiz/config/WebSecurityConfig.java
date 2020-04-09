@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
     private final DataSource dataSource;
     private UserService userService;
     private PasswordEncoder passwordEncoder;
@@ -47,7 +48,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/static/**", "/activate/*").permitAll()
+                .antMatchers("/", "/static/**", "/intro/*").permitAll()
+                .antMatchers("/play/**").hasAuthority(Role.USER.name())
+                .antMatchers("/setup/**").hasAuthority(Role.USER.name())
                 .antMatchers("/sign-up").not().authenticated()
                 .anyRequest().authenticated()
                 .and()
