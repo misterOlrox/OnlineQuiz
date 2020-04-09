@@ -1,4 +1,4 @@
-package com.olrox.quiz.controller;
+package com.olrox.quiz.controller.common.game;
 
 import com.olrox.quiz.entity.QuizQuestionTheme;
 import com.olrox.quiz.service.QuizQuestionThemeService;
@@ -39,7 +39,7 @@ public class SetupGameController {
             hasErrors = true;
         }
 
-        int quantityOfQuestions = 0;
+        int quantityOfQuestions;
         try {
             quantityOfQuestions = Integer.parseInt(quantity);
             if (quantityOfQuestions < 5 || quantityOfQuestions > 100) {
@@ -59,6 +59,7 @@ public class SetupGameController {
         if (hasErrors) {
             List<QuizQuestionTheme> themes = quizQuestionThemeService.getAllThemes();
             model.addAttribute("themes", themes);
+
             return "setup/solo";
         } else {
             return "redirect:/play/solo";

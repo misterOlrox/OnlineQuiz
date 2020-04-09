@@ -1,4 +1,4 @@
-package com.olrox.quiz.controller;
+package com.olrox.quiz.controller.common.auth;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

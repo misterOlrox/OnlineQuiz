@@ -1,4 +1,4 @@
-package com.olrox.quiz.controller;
+package com.olrox.quiz.controller.common.auth;
 
 import com.olrox.quiz.controller.util.ControllerUtils;
 import com.olrox.quiz.entity.User;

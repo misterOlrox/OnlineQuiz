@@ -1,4 +1,4 @@
-package com.olrox.quiz.controller;
+package com.olrox.quiz.controller.common;
 
 import com.olrox.quiz.entity.Role;
 import com.olrox.quiz.entity.User;
