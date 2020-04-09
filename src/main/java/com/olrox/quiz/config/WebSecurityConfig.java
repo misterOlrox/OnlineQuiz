@@ -51,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/static/**", "/intro/*").permitAll()
                 .antMatchers("/play/**").hasAuthority(Role.USER.name())
                 .antMatchers("/setup/**").hasAuthority(Role.USER.name())
+                .antMatchers("/add-question").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
                 .antMatchers("/sign-up").not().authenticated()
                 .anyRequest().authenticated()
                 .and()

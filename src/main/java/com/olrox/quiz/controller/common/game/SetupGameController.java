@@ -1,8 +1,11 @@
 package com.olrox.quiz.controller.common.game;
 
 import com.olrox.quiz.entity.QuizQuestionTheme;
+import com.olrox.quiz.entity.User;
 import com.olrox.quiz.service.QuizQuestionThemeService;
+import com.olrox.quiz.service.SoloGameService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -18,6 +21,9 @@ public class SetupGameController {
     @Autowired
     private QuizQuestionThemeService quizQuestionThemeService;
 
+    @Autowired
+    private SoloGameService soloGameService;
+
     @GetMapping("/setup/solo")
     public String getSetupSolo(Model model) {
         List<QuizQuestionTheme> themes = quizQuestionThemeService.getAllThemes();
@@ -31,6 +37,7 @@ public class SetupGameController {
             @RequestParam String time,
             @RequestParam String quantity,
             @RequestParam List<String> selectedThemes,
+            @AuthenticationPrincipal User user,
             Model model) {
 
         boolean hasErrors = false;
@@ -62,6 +69,8 @@ public class SetupGameController {
 
             return "setup/solo";
         } else {
+
+
             return "redirect:/play/solo";
         }
     }
