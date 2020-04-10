@@ -1,7 +1,9 @@
 package com.olrox.quiz.controller.common;
 
+import com.olrox.quiz.entity.QuizQuestionTheme;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.service.QuizQuestionService;
+import com.olrox.quiz.service.QuizQuestionThemeService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +26,14 @@ public class AddQuestionController {
     @Autowired
     private QuizQuestionService quizQuestionService;
 
+    @Autowired
+    private QuizQuestionThemeService quizQuestionThemeService;
 
     @GetMapping("/add-question")
-    public String addQuestion() {
+    public String addQuestion(Model model) {
+        List<QuizQuestionTheme> themes = quizQuestionThemeService.getAllThemes();
+        model.addAttribute("themes", themes);
+
         return "add-question";
     }
 
@@ -35,6 +42,7 @@ public class AddQuestionController {
             @RequestParam String question,
             @RequestParam String correctAnswer,
             @RequestParam List<String> wrongAnswers,
+            @RequestParam List<Long> selectedThemes,
             @AuthenticationPrincipal User user,
             Model model
     ) {
@@ -70,8 +78,11 @@ public class AddQuestionController {
                     filtered.add(wrongAnswer);
                 }
             }
-            quizQuestionService.addQuestion(user, question, correctAnswer, filtered);
+            quizQuestionService.addQuestion(user, question, correctAnswer, filtered, selectedThemes);
             model.addAttribute("success", "Successfully added new question");
+
+            List<QuizQuestionTheme> themes = quizQuestionThemeService.getAllThemes();
+            model.addAttribute("themes", themes);
 
             return "add-question";
         }

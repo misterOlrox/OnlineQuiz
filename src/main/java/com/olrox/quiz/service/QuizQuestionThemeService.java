@@ -17,8 +17,19 @@ public class QuizQuestionThemeService {
         return quizQuestionThemeRepository.save(theme);
     }
 
+    public QuizQuestionTheme add(String themeName) {
+        QuizQuestionTheme theme = new QuizQuestionTheme();
+        theme.setThemeName(themeName);
+
+        return add(theme);
+    }
+
     public List<QuizQuestionTheme> getAllThemes() {
         return quizQuestionThemeRepository.findAll();
+    }
+
+    public boolean exists(String themeName) {
+        return quizQuestionThemeRepository.existsByThemeNameEquals(themeName);
     }
 
 }

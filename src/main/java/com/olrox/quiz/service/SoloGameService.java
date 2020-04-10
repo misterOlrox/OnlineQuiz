@@ -10,7 +10,6 @@ import java.util.Collection;
 @Service
 public class SoloGameService {
 
-    // TODO
     public String generateGameRoom(
             User user,
             Integer timeForQuestionInSeconds,
@@ -20,7 +19,6 @@ public class SoloGameService {
         SoloGame soloGame = new SoloGame();
         soloGame.setCreator(user);
         soloGame.setTimeForQuestionInSeconds(timeForQuestionInSeconds);
-        soloGame.setNumberOfQuestions(numberOfQuestions);
         soloGame.setStatus(SoloGame.Status.IN_PROGRESS);
 
 

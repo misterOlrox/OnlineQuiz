@@ -21,7 +21,7 @@
             </a>
             </#if>
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link" href="https://bulma.io/documentation/overview/start/">
+                <a class="navbar-link" href="/">
                     Quiz
                 </a>
                 <div class="navbar-dropdown is-boxed">
@@ -40,6 +40,24 @@
                     </a>
                 </div>
             </div>
+
+            <#if user??>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link" href="/add-question">
+                    Questions
+                </a>
+                <div class="navbar-dropdown is-boxed">
+                    <a class="navbar-item" href="/add-question">
+                        Add question
+                    </a>
+                    <#if isAdmin || isModerator>
+                    <a class="navbar-item" href="/add-theme">
+                        Add theme
+                    </a>
+                    </#if>
+                </div>
+            </div>
+            </#if>
         </div>
 
         <div class="navbar-end">

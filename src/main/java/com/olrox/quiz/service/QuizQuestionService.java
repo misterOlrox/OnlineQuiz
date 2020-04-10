@@ -4,18 +4,21 @@ import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.QuizQuestionTheme;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.repository.QuizQuestionRepository;
+import com.olrox.quiz.repository.QuizQuestionThemeRepository;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class QuizQuestionService {
 
-    @Autowired
-    private QuizQuestionRepository quizQuestionRepository;
+    @Autowired private QuizQuestionRepository quizQuestionRepository;
+
+    @Autowired private QuizQuestionThemeRepository quizQuestionThemeRepository;
 
     public QuizQuestion addQuestion(
             User author,
@@ -23,7 +26,8 @@ public class QuizQuestionService {
             String correctAnswer,
             String wrongAnswersJson,
             boolean approved,
-            QuizQuestionTheme theme) {
+            QuizQuestionTheme theme
+    ) {
 
         QuizQuestion quizQuestion = getQuizQuestionWithFields(
                 author,
@@ -42,7 +46,8 @@ public class QuizQuestionService {
             String question,
             String correctAnswer,
             String wrongAnswersJson,
-            boolean approved) {
+            boolean approved
+    ) {
 
         QuizQuestion quizQuestion = getQuizQuestionWithFields(
                 author,
@@ -59,15 +64,27 @@ public class QuizQuestionService {
             User author,
             String question,
             String correctAnswer,
-            List<String> wrongAnswers) {
+            List<String> wrongAnswers,
+            List<Long> selectedThemes
+    ) {
 
         String wrongAnswersJson = (new JSONArray(wrongAnswers)).toString();
 
-        if (author.isAdmin()) {
-            return addQuestion(author, question, correctAnswer, wrongAnswersJson,true);
-        } else {
-            return addQuestion(author, question, correctAnswer, wrongAnswersJson,false);
+        boolean approved = author.isAdmin();
+        QuizQuestion quizQuestion = getQuizQuestionWithFields(
+                author,
+                question,
+                correctAnswer,
+                wrongAnswersJson,
+                approved
+        );
+
+        if (!selectedThemes.isEmpty()) {
+            var themes = quizQuestionThemeRepository.findAllById(selectedThemes);
+            quizQuestion.setThemes(Set.copyOf(themes));
         }
+
+        return quizQuestionRepository.save(quizQuestion);
     }
 
     private QuizQuestion getQuizQuestionWithFields(
@@ -87,8 +104,9 @@ public class QuizQuestionService {
         return quizQuestion;
     }
 
-    // TODO
     public List<Long> getQuestionIdsByThemes(Collection<QuizQuestionTheme> themes) {
+
+
         return null;
     }
 }
