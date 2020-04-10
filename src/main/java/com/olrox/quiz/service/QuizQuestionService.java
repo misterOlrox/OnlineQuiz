@@ -5,20 +5,22 @@ import com.olrox.quiz.entity.QuizQuestionTheme;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.repository.QuizQuestionRepository;
 import com.olrox.quiz.repository.QuizQuestionThemeRepository;
+import com.olrox.quiz.util.RandomUtil;
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 @Service
 public class QuizQuestionService {
 
-    @Autowired private QuizQuestionRepository quizQuestionRepository;
+    @Autowired
+    private QuizQuestionRepository quizQuestionRepository;
 
-    @Autowired private QuizQuestionThemeRepository quizQuestionThemeRepository;
+    @Autowired
+    private QuizQuestionThemeRepository quizQuestionThemeRepository;
 
     public QuizQuestion addQuestion(
             User author,
@@ -104,9 +106,10 @@ public class QuizQuestionService {
         return quizQuestion;
     }
 
-    public List<Long> getQuestionIdsByThemes(Collection<QuizQuestionTheme> themes) {
+    public List<QuizQuestion> findRandomQuestions(int number, List<Long> themesIds) {
+        var questionsIds = quizQuestionRepository.getQuestionIdsByThemes(themesIds);
+        var randomQuestionIds = RandomUtil.pickNRandomElements(questionsIds, number);
 
-
-        return null;
+        return quizQuestionRepository.findAllById(randomQuestionIds);
     }
 }

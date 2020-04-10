@@ -8,13 +8,13 @@
                     Solo quiz
                 </h1>
                 <h2 class="subtitle">
-                    Set up your next quiz
+                    Your game id: ${gameId}
                 </h2>
             </div>
         </div>
     </section>
 
     <div class="container has-text-centered" style="margin-top: 5%">
-        <a href="/play/solo" class="button is-link is-rounded is-medium">Play Solo Quiz</a>
+        <a href="/play/solo/${gameId}" class="button is-link is-rounded is-medium">Answer</a>
     </div>
 </@c.page>

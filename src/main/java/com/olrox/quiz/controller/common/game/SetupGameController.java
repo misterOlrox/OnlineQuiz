@@ -4,6 +4,7 @@ import com.olrox.quiz.entity.QuizQuestionTheme;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.service.QuizQuestionThemeService;
 import com.olrox.quiz.service.SoloGameService;
+import com.olrox.quiz.util.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -20,7 +21,6 @@ public class SetupGameController {
 
     @Autowired
     private QuizQuestionThemeService quizQuestionThemeService;
-
     @Autowired
     private SoloGameService soloGameService;
 
@@ -36,7 +36,7 @@ public class SetupGameController {
     public String postSetupSolo(
             @RequestParam String time,
             @RequestParam String quantity,
-            @RequestParam List<String> selectedThemes,
+            @RequestParam List<Long> selectedThemes,
             @AuthenticationPrincipal User user,
             Model model) {
 
@@ -46,7 +46,7 @@ public class SetupGameController {
             hasErrors = true;
         }
 
-        int quantityOfQuestions;
+        int quantityOfQuestions = 0;
         try {
             quantityOfQuestions = Integer.parseInt(quantity);
             if (quantityOfQuestions < 5 || quantityOfQuestions > 100) {
@@ -70,8 +70,13 @@ public class SetupGameController {
             return "setup/solo";
         } else {
 
+            var soloGame = soloGameService.generateSoloGame(
+                    user,
+                    TimeUtil.getTimeInSecondsFromStringWithMinuteAndSecond(time),
+                    quantityOfQuestions,
+                    selectedThemes);
 
-            return "redirect:/play/solo";
+            return "redirect:/play/solo/" + soloGame;
         }
     }
 }
