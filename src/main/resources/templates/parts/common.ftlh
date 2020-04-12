@@ -7,8 +7,12 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.0/css/bulma.min.css">
-        <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+        <link rel="stylesheet" href="/webjars/bulma/0.8.2/css/bulma.min.css">
+        <script defer src="/webjars/font-awesome/5.13.0/js/all.js"></script>
+        <script src="/webjars/jquery/3.1.1-1/jquery.js"></script>
+        <script src="/webjars/sockjs-client/1.0.2/sockjs.js"></script>
+        <script src="/webjars/stomp-websocket/2.3.3/stomp.js"></script>
+        <script src="/js/websocket.js"></script>
     </head>
     <body>
     <#include "navbar.ftlh">

@@ -3,7 +3,7 @@
 <nav class="navbar is-primary is-fixed-top">
     <div class="navbar-brand">
         <a class="navbar-item" href="/">
-            <img src="https://github.com/misterOlrox/QuizImages/blob/master/logo.jpg?raw=true" alt="Logo"
+            <img src="/images/logo.jpg" alt="Logo"
                  width="35" height="35">
         </a>
         <div class="navbar-burger burger" data-target="navbarExampleTransparentExample">

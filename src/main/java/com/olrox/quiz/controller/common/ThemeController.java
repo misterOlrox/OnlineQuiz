@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class AddThemeController {
+public class ThemeController {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(AddThemeController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ThemeController.class);
 
     @Autowired private QuizQuestionThemeService quizQuestionThemeService;
 

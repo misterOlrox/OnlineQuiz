@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-public class AddQuestionController {
+public class QuestionController {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(AddQuestionController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(QuestionController.class);
 
     @Autowired
     private QuizQuestionService quizQuestionService;
@@ -31,7 +31,7 @@ public class AddQuestionController {
     private QuizQuestionThemeService quizQuestionThemeService;
 
     @GetMapping("/add-question")
-    public String addQuestion(Model model) {
+    public String getFormForAddQuestion(Model model) {
         List<QuizQuestionTheme> themes = quizQuestionThemeService.getAllThemes();
         model.addAttribute("themes", themes);
 
@@ -39,7 +39,7 @@ public class AddQuestionController {
     }
 
     @PostMapping("/add-question")
-    public String addQuestionByUser(
+    public String postFormForAddQuestion(
             @RequestParam String question,
             @RequestParam String correctAnswer,
             @RequestParam List<String> wrongAnswers,
@@ -69,7 +69,6 @@ public class AddQuestionController {
 
         if (anyError) {
             LOGGER.info("Something was wrong in form filling");
-            return "add-question";
         } else {
             LOGGER.info("Success add-question form filling");
 
@@ -81,11 +80,8 @@ public class AddQuestionController {
             }
             quizQuestionService.addQuestion(user, question, correctAnswer, WrongAnswer.from(filtered), selectedThemes);
             model.addAttribute("success", "Successfully added new question");
-
-            List<QuizQuestionTheme> themes = quizQuestionThemeService.getAllThemes();
-            model.addAttribute("themes", themes);
-
-            return "add-question";
         }
+
+        return getFormForAddQuestion(model);
     }
 }

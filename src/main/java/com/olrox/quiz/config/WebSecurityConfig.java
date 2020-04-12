@@ -48,7 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/static/**", "/intro/*").permitAll()
+                .antMatchers("/", "/static/**", "/intro/*", "/webjars/**", "/images/*").permitAll()
                 .antMatchers("/play/**").hasAuthority(Role.USER.name())
                 .antMatchers("/setup/**").hasAuthority(Role.USER.name())
                 .antMatchers("/add-question").authenticated()
@@ -58,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
+                .defaultSuccessUrl("/", true)
                 .permitAll()
                 .and()
                 .rememberMe()
