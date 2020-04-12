@@ -7,9 +7,13 @@ import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SoloGameService {
@@ -20,6 +24,10 @@ public class SoloGameService {
     private QuizQuestionService quizQuestionService;
     @Autowired
     private SoloGameRepository soloGameRepository;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    private Map<Long, SoloGame> activeGames = new HashMap<>();
 
     public Long generateSoloGame(
             User user,
@@ -44,9 +52,27 @@ public class SoloGameService {
         soloGame.setStatus(SoloGame.Status.IN_PROGRESS);
         soloGame.setNumberOfQuestions(foundSize);
         soloGame.setQuestionList(questions);
+        soloGame.setCreationTime(LocalDateTime.now());
 
         soloGameRepository.save(soloGame);
+        activeGames.put(soloGame.getId(), soloGame);
 
         return soloGame.getId();
+    }
+
+    public List<SoloGame> deleteGamesInProgress() {
+        return soloGameRepository.deleteAllByStatusEquals(SoloGame.Status.IN_PROGRESS);
+    }
+
+    public List<SoloGame> loadGamesInProgressFromDb() {
+        return soloGameRepository.findAllByStatusEquals(SoloGame.Status.IN_PROGRESS);
+    }
+
+    public List<SoloGame> getGamesCreatedBy(User user) {
+        return soloGameRepository.findAllByCreator(user);
+    }
+
+    public SoloGame getGameById(Long id) {
+        return activeGames.get(id);
     }
 }

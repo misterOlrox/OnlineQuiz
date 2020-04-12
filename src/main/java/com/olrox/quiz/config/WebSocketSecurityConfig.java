@@ -6,13 +6,13 @@ import org.springframework.security.config.annotation.web.messaging.MessageSecur
 import org.springframework.security.config.annotation.web.socket.AbstractSecurityWebSocketMessageBrokerConfigurer;
 
 @Configuration
-public class WebsocketSecurityConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
+public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBrokerConfigurer {
 
     @Override
     protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
         messages
                 .nullDestMatcher().authenticated()
-                .simpDestMatchers("/topic/tracker").hasAuthority(Role.ADMIN.name())
+                .simpDestMatchers("/topic/tracker").hasAuthority(Role.USER.name())
                 // matches any destination that starts with /topic/
                 // (i.e. cannot send messages directly to /topic/)
                 // (i.e. cannot subscribe to /topic/messages/* to get messages sent to

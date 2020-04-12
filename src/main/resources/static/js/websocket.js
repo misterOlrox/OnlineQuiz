@@ -18,8 +18,11 @@ function connect() {
 
 function onConnected() {
     console.log("On connected event started");
-    stompClient.subscribe('/topic/public', onMessageReceived);
-    stompClient.send("/app/chat.addUser",
+    let gameId = wsContext.gameId;
+    if (gameId !== -1) {
+        stompClient.subscribe('/topic/info.game/' + gameId, onMessageReceived);
+    }
+    stompClient.send("/chat.addUser",
         {},
         JSON.stringify({sender: username, type: 'JOIN'})
     );
@@ -38,15 +41,14 @@ function sendMessage(event) {
             content: messageInput.value,
             type: 'CHAT'
         };
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+        stompClient.send("/chat.sendMessage", {}, JSON.stringify(chatMessage));
         messageInput.value = '';
     }
     event.preventDefault();
 }
 
 function onMessageReceived(payload) {
-    console.log("onMessageReceived started");
-    console.log("Payload:" + payload);
+    console.log("Message received");
 }
 
 connect();

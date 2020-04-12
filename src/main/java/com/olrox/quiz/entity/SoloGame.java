@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -31,6 +32,8 @@ public class SoloGame {
 
     @ManyToMany
     private List<QuizQuestion> questionList;
+
+    private LocalDateTime creationTime;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -81,5 +84,13 @@ public class SoloGame {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public LocalDateTime getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(LocalDateTime started) {
+        this.creationTime = started;
     }
 }
