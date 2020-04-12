@@ -3,6 +3,7 @@ package com.olrox.quiz.service;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.QuizQuestionTheme;
 import com.olrox.quiz.entity.User;
+import com.olrox.quiz.entity.WrongAnswer;
 import com.olrox.quiz.repository.QuizQuestionRepository;
 import com.olrox.quiz.repository.QuizQuestionThemeRepository;
 import com.olrox.quiz.util.RandomUtil;
@@ -26,7 +27,7 @@ public class QuizQuestionService {
             User author,
             String question,
             String correctAnswer,
-            String wrongAnswersJson,
+            List<WrongAnswer> wrongAnswers,
             boolean approved,
             QuizQuestionTheme theme
     ) {
@@ -35,7 +36,7 @@ public class QuizQuestionService {
                 author,
                 question,
                 correctAnswer,
-                wrongAnswersJson,
+                wrongAnswers,
                 approved
         );
         quizQuestion.addTheme(theme);
@@ -47,7 +48,7 @@ public class QuizQuestionService {
             User author,
             String question,
             String correctAnswer,
-            String wrongAnswersJson,
+            List<WrongAnswer> wrongAnswers,
             boolean approved
     ) {
 
@@ -55,7 +56,7 @@ public class QuizQuestionService {
                 author,
                 question,
                 correctAnswer,
-                wrongAnswersJson,
+                wrongAnswers,
                 approved
         );
 
@@ -66,7 +67,7 @@ public class QuizQuestionService {
             User author,
             String question,
             String correctAnswer,
-            List<String> wrongAnswers,
+            List<WrongAnswer> wrongAnswers,
             List<Long> selectedThemes
     ) {
 
@@ -77,7 +78,7 @@ public class QuizQuestionService {
                 author,
                 question,
                 correctAnswer,
-                wrongAnswersJson,
+                wrongAnswers,
                 approved
         );
 
@@ -93,15 +94,17 @@ public class QuizQuestionService {
             User author,
             String question,
             String correctAnswer,
-            String wrongAnswersJson,
+            List<WrongAnswer> wrongAnswers,
             boolean approved) {
 
         QuizQuestion quizQuestion = new QuizQuestion();
         quizQuestion.setAuthor(author);
         quizQuestion.setQuestion(question);
         quizQuestion.setCorrectAnswer(correctAnswer);
-        quizQuestion.setWrongAnswersJson(wrongAnswersJson);
+        quizQuestion.setWrongAnswers(wrongAnswers);
         quizQuestion.setApproved(approved);
+
+        wrongAnswers.forEach(x -> x.setQuizQuestion(quizQuestion));
 
         return quizQuestion;
     }

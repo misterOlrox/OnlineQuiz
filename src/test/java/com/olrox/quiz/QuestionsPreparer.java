@@ -4,6 +4,7 @@ import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.QuizQuestionTheme;
 import com.olrox.quiz.entity.Role;
 import com.olrox.quiz.entity.User;
+import com.olrox.quiz.entity.WrongAnswer;
 import com.olrox.quiz.service.QuizQuestionService;
 import com.olrox.quiz.service.QuizQuestionThemeService;
 import com.olrox.quiz.service.UserService;
@@ -26,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SpringBootTest
 class QuestionsPreparer {
@@ -74,7 +76,13 @@ class QuestionsPreparer {
                 String[] wrongAnswersArray = wrongAnswersString
                         .replace("Ответы для викторин: ", "")
                         .split(", ");
-                quizQuestion.setWrongAnswersJson(Arrays.asList(wrongAnswersArray));
+
+                quizQuestion.setWrongAnswers(
+                        Arrays
+                                .stream(wrongAnswersArray)
+                                .map(x -> new WrongAnswer(x, quizQuestion))
+                                .collect(Collectors.toList())
+                );
 
                 Element correctAnswer = element.getElementsByTag("td").last();
                 quizQuestion.setCorrectAnswer(correctAnswer.text());
@@ -115,7 +123,7 @@ class QuestionsPreparer {
                     admin,
                     jsonObject.getString("question"),
                     jsonObject.getString("correctAnswer"),
-                    jsonObject.getJSONArray("wrongAnswers").toString(),
+                    WrongAnswer.from(jsonObject.getJSONArray("wrongAnswers").toList()),
                     true,
                     quizQuestionTheme
             );

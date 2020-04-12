@@ -1,8 +1,8 @@
 package com.olrox.quiz.entity;
 
-import org.json.JSONArray;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -10,9 +10,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -26,7 +27,9 @@ public class QuizQuestion {
 
     private String correctAnswer;
 
-    private String wrongAnswersJson;
+    @OneToMany(mappedBy = "quizQuestion", cascade = {CascadeType.ALL},
+            fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<WrongAnswer> wrongAnswers;
 
     @ManyToOne
     private User author;
@@ -66,16 +69,12 @@ public class QuizQuestion {
         this.correctAnswer = correctAnswer;
     }
 
-    public String getWrongAnswersJson() {
-        return wrongAnswersJson;
+    public List<WrongAnswer> getWrongAnswers() {
+        return wrongAnswers;
     }
 
-    public void setWrongAnswersJson(String wrongAnswersJson) {
-        this.wrongAnswersJson = wrongAnswersJson;
-    }
-
-    public void setWrongAnswersJson(Collection<String> wrongAnswers) {
-        this.wrongAnswersJson = new JSONArray(wrongAnswers).toString();
+    public void setWrongAnswers(List<WrongAnswer> wrongAnswers) {
+        this.wrongAnswers = wrongAnswers;
     }
 
     public User getAuthor() {

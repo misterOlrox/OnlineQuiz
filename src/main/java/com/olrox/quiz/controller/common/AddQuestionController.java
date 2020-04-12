@@ -2,6 +2,7 @@ package com.olrox.quiz.controller.common;
 
 import com.olrox.quiz.entity.QuizQuestionTheme;
 import com.olrox.quiz.entity.User;
+import com.olrox.quiz.entity.WrongAnswer;
 import com.olrox.quiz.service.QuizQuestionService;
 import com.olrox.quiz.service.QuizQuestionThemeService;
 import org.slf4j.Logger;
@@ -78,7 +79,7 @@ public class AddQuestionController {
                     filtered.add(wrongAnswer);
                 }
             }
-            quizQuestionService.addQuestion(user, question, correctAnswer, filtered, selectedThemes);
+            quizQuestionService.addQuestion(user, question, correctAnswer, WrongAnswer.from(filtered), selectedThemes);
             model.addAttribute("success", "Successfully added new question");
 
             List<QuizQuestionTheme> themes = quizQuestionThemeService.getAllThemes();
