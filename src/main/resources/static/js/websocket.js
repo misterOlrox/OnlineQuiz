@@ -3,6 +3,7 @@
 let messageInput = document.querySelector('#message');
 let stompClient = null;
 let username = null;
+let soloGameId = null;
 
 function connect() {
     username = wsContext.username;
@@ -18,11 +19,12 @@ function connect() {
 
 function onConnected() {
     console.log("On connected event started");
-    let gameId = wsContext.gameId;
-    if (gameId !== -1) {
-        stompClient.subscribe('/topic/solo.game.info/' + gameId, onSoloGameInfoReceived);
-        stompClient.subscribe('/topic/solo.game/' + gameId, onSoloGameReceived);
-        getSoloGameQuestion(gameId);
+    soloGameId = wsContext.gameId;
+    if (soloGameId !== -1) {
+        stompClient.subscribe('/topic/solo.game.info/' + soloGameId, onSoloGameInfoReceived);
+        stompClient.subscribe('/topic/solo.game/' + soloGameId, onSoloGameReceived);
+        stompClient.subscribe('/topic/solo.game/' + soloGameId + '/answer.res', onAnswerResult);
+        getSoloGameQuestion(soloGameId);
     }
 }
 
@@ -57,13 +59,17 @@ function onSoloGameReceived(data) {
     let body = JSON.parse(data.body);
 
     question.innerText = body.question;
+    qtitle.innerText = 'Question';
+    btns.innerHTML = '';
     qtitle.innerText += " " + (body.number + 1);
     let possAnswers = body.answers;
     for (let i = 0; i < possAnswers.length; i++) {
-        btns.innerHTML += "<button class=\"button is-rounded is-medium is-success\""
-                            + " style=\"margin-left: 10px;margin-right: 10px;background-color: hsl(160, 60%, 30%)\">"
-                                    + possAnswers[i]
-                        + "</button>";
+        let answ = possAnswers[i];
+        btns.innerHTML += "<button name=\"answer\" class=\"button is-rounded is-medium is-success\""
+            + " style=\"margin: 5px 10px;background-color: hsl(160, 60%, 30%)\""
+            + " onclick='sendAnswerToSoloGame(\"" + answ.toString() + "\")'>"
+            + answ
+            + "</button>";
     }
 }
 
@@ -72,6 +78,13 @@ function getSoloGameQuestion(id) {
 }
 
 function sendAnswerToSoloGame(answer) {
+    let answerJson = {
+        value: answer
+    };
+    stompClient.send("/solo.game/" + soloGameId + "/answer", {}, JSON.stringify(answerJson));
+}
+
+function onAnswerResult(data) {
 
 }
 

@@ -3,12 +3,15 @@ package com.olrox.quiz.websocket;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.process.SoloGameProcess;
 import com.olrox.quiz.service.SoloGameService;
+import com.olrox.quiz.websocket.dto.Answer;
+import com.olrox.quiz.websocket.dto.AnswerResultDto;
 import com.olrox.quiz.websocket.dto.GameProcessInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,13 +41,35 @@ public class SoloGameController {
     }
 
     @MessageMapping("/solo.game/{id}/get.question")
-    public void sendMessage(@DestinationVariable Long id) {
+    public void getQuestion(@DestinationVariable Long id) {
         var process = soloGameService.getGameProcessById(id);
 
         LOG.info("Sending question to soloGame with id {}", id);
         messagingTemplate.convertAndSend(
                 "/topic/solo.game/" + id,
                 process.getCurrentQuestionDto());
+    }
+
+    @MessageMapping("/solo.game/{id}/answer")
+    public void answer(@DestinationVariable Long id, @Payload Answer answer) {
+        LOG.info("Do answer for game with id {}, answer is {}", id, answer.getValue());
+        var process = soloGameService.getGameProcessById(id);
+        var result = process.doAnswer(answer.getValue());
+        var dto = AnswerResultDto.from(result);
+        LOG.info("Answer result for game with id {}, answer is {}", id, dto);
+        messagingTemplate.convertAndSend("/topic/solo.game/" + id + "/answer.res", dto);
+
+        if (process.isFinished()) {
+            finishGame(process);
+        } else {
+            messagingTemplate.convertAndSend(
+                    "/topic/solo.game/" + id,
+                    process.getCurrentQuestionDto());
+        }
+    }
+
+    private void finishGame(SoloGameProcess finishedProcess) {
+        soloGameService.finishGame(finishedProcess);
     }
 
 }

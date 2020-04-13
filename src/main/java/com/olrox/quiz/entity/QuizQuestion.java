@@ -12,6 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,7 +30,7 @@ public class QuizQuestion {
 
     @OneToMany(mappedBy = "quizQuestion", cascade = {CascadeType.ALL},
             fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<WrongAnswer> wrongAnswers;
+    private List<WrongAnswer> wrongAnswers = new ArrayList<>();
 
     @ManyToOne
     private User author;

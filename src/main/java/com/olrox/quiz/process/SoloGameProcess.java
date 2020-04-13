@@ -1,33 +1,30 @@
 package com.olrox.quiz.process;
 
+import com.olrox.quiz.entity.AnswerResult;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.WrongAnswer;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 public class SoloGameProcess {
-
-    private static final Long CORRECT_ANSWER_CODE = -1L;
-    public static final Long TIMEOUT_CODE = -2L;
 
     private volatile int currentQuestionInd;
     private SoloGame soloGame;
     private List<QuestionDto> questionDtos;
     private List<QuizQuestion> questionList;
-    private Map<QuizQuestion, Long> answers;
+    private List<AnswerResult> results;
+    private volatile boolean finished = false;
 
     public SoloGameProcess(SoloGame soloGame) {
         this.soloGame = soloGame;
         this.questionList = soloGame.getQuestionList();
         this.questionDtos = questionList.stream().map(QuestionDto::new).collect(Collectors.toList());
         this.currentQuestionInd = 0;
-        this.answers = new HashMap<>();
+        this.results = new ArrayList<>();
     }
 
     public synchronized QuestionDto getCurrentQuestionDto() {
@@ -37,26 +34,45 @@ public class SoloGameProcess {
     }
 
     public synchronized QuizQuestion getCurrentQuestion() {
-        return questionList.get(currentQuestionInd);
+        return finished ? null : questionList.get(currentQuestionInd);
     }
 
-    public synchronized boolean doAnswer(String answer) {
-        currentQuestionInd++;
+    public synchronized AnswerResult doAnswer(String answer) {
+        if (finished) {
+            return null;
+        }
+
+        AnswerResult result = new AnswerResult();
+        AnswerResult.Status resultStatus = AnswerResult.Status.UNKNOWN;
         QuizQuestion currentQuestion = getCurrentQuestion();
         if (answer.equals(currentQuestion.getCorrectAnswer())) {
-            answers.put(currentQuestion, CORRECT_ANSWER_CODE);
-            return true;
+            resultStatus = AnswerResult.Status.CORRECT;
         } else {
             for (WrongAnswer wrongAnswer : currentQuestion.getWrongAnswers()) {
                 if (wrongAnswer.getValue().equals(answer)) {
-                    answers.put(currentQuestion, wrongAnswer.getId());
-                    return false;
+                    resultStatus = AnswerResult.Status.WRONG;
+                    break;
                 }
             }
-
-            answers.put(currentQuestion, TIMEOUT_CODE);
-            return false;
         }
+
+        result.setQuizQuestion(currentQuestion);
+        result.setStatus(resultStatus);
+        result.setAnswer(answer);
+
+        results.add(result);
+        if (results.size() == questionList.size()) {
+            finishGame();
+        } else {
+            currentQuestionInd = results.size();
+        }
+
+        return result;
+    }
+
+    private synchronized void finishGame() {
+        finished = true;
+        currentQuestionInd = -1;
     }
 
     public SoloGame getSoloGame() {
@@ -79,5 +95,9 @@ public class SoloGameProcess {
             quizQuestion.getWrongAnswers().forEach(x -> answers.add(x.getValue()));
             Collections.shuffle(answers);
         }
+    }
+
+    public synchronized boolean isFinished() {
+        return finished;
     }
 }

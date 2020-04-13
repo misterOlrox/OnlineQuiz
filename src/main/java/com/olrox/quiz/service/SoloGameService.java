@@ -12,9 +12,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class SoloGameService {
@@ -28,7 +28,7 @@ public class SoloGameService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    private Map<Long, SoloGameProcess> activeGames = new HashMap<>();
+    private Map<Long, SoloGameProcess> activeGames = new ConcurrentHashMap<>();
 
     public Long generateSoloGame(
             User user,
@@ -76,5 +76,10 @@ public class SoloGameService {
 
     public SoloGameProcess getGameProcessById(Long id) {
         return activeGames.get(id);
+    }
+
+    // TODO
+    public void finishGame(SoloGameProcess process) {
+        activeGames.remove(process.getSoloGame().getId());
     }
 }

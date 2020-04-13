@@ -93,4 +93,17 @@ public class SoloGame {
     public void setCreationTime(LocalDateTime started) {
         this.creationTime = started;
     }
+
+    @Override
+    public String toString() {
+        return "SoloGame{" +
+                "id=" + id +
+                ", creator=" + creator +
+                ", timeForQuestionInSeconds=" + timeForQuestionInSeconds +
+                ", numberOfQuestions=" + numberOfQuestions +
+                ", questionList=" + questionList +
+                ", creationTime=" + creationTime +
+                ", status=" + status +
+                '}';
+    }
 }
