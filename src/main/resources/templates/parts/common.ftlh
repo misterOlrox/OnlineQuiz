@@ -14,7 +14,7 @@
         <script src="/webjars/jquery/3.1.1-1/jquery.js"></script>
         <script src="/webjars/sockjs-client/1.0.2/sockjs.min.js"></script>
         <script src="/webjars/stomp-websocket/2.3.3/stomp.js"></script>
-        <script src="/js/websocket.js"></script>
+        <script src="/js/app.js"></script>
     </head>
     <body>
     <#include "navbar.ftlh">

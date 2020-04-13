@@ -119,7 +119,6 @@
 
             <input type="hidden" id="selectedThemes" name="selectedThemes"/>
             <input type="hidden" id="wrongAnswers" name="wrongAnswers"/>
-            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
             <div class="container has-text-centered" style="margin-top: 5%">
                 <input class="button is-link is-rounded is-medium" type="submit" value="Add question"/>
             </div>

@@ -1,12 +1,12 @@
 package com.olrox.quiz.process;
 
+import com.olrox.quiz.dto.QuestionDto;
 import com.olrox.quiz.entity.AnswerResult;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.WrongAnswer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +29,7 @@ public class SoloGameProcess {
 
     public synchronized QuestionDto getCurrentQuestionDto() {
         var dto = questionDtos.get(currentQuestionInd);
-        dto.number = currentQuestionInd;
+        dto.setNumber(currentQuestionInd);
         return dto;
     }
 
@@ -81,20 +81,6 @@ public class SoloGameProcess {
 
     public int getCurrentQuestionInd() {
         return currentQuestionInd;
-    }
-
-    public static class QuestionDto {
-        public int number;
-        public String question;
-        public List<String> answers = new ArrayList<>();
-
-        public QuestionDto(QuizQuestion quizQuestion) {
-            this.question = quizQuestion.getQuestion();
-
-            answers.add(quizQuestion.getCorrectAnswer());
-            quizQuestion.getWrongAnswers().forEach(x -> answers.add(x.getValue()));
-            Collections.shuffle(answers);
-        }
     }
 
     public synchronized boolean isFinished() {

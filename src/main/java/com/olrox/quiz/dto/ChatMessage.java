@@ -1,4 +1,4 @@
-package com.olrox.quiz.websocket.dto;
+package com.olrox.quiz.dto;
 
 public class ChatMessage {
     private MessageType type;

@@ -1,6 +1,6 @@
 package com.olrox.quiz.websocket;
 
-import com.olrox.quiz.websocket.dto.ChatMessage;
+import com.olrox.quiz.dto.ChatMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

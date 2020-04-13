@@ -28,4 +28,10 @@
             </div>
         </div>
     </section>
+
+    <script>
+        window.onload = function () {
+            getQuestion();
+        }
+    </script>
 </@c.page>

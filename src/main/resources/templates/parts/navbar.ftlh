@@ -65,7 +65,6 @@
                 <div class="field is-grouped">
                     <#if user?? && user.isActive()>
                         <form action="/logout" method="post">
-                            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
                             <p class="control">
                                 <button class="bd-tw-button button is-primary" type="submit">
                                     Sign Out

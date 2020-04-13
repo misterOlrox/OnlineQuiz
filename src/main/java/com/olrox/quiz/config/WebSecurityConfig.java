@@ -51,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/", "/static/**", "/intro/*", "/webjars/**", "/images/**", "/js/**").permitAll()
                 .antMatchers("/play/**").hasAuthority(Role.USER.name())
                 .antMatchers("/setup/**").hasAuthority(Role.USER.name())
+                .antMatchers("/game/solo/**").hasAuthority(Role.USER.name())
                 .antMatchers("/add-question").authenticated()
                 .antMatchers("/add-theme").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
                 .antMatchers("/sign-up").not().authenticated()
@@ -64,7 +65,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMe()
                 .and()
                 .logout()
-                .permitAll();
+                .permitAll()
+                .and()
+                .csrf().disable();
     }
 
     @Override

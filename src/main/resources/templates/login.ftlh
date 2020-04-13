@@ -52,7 +52,6 @@
                 </#if>
             </div>
 
-            <input type="hidden" name="_csrf" value="${_csrf.token}"/>
             <div class="container has-text-centered" style="margin-top: 5%">
                 <input class="button is-link is-rounded is-medium" type="submit" value="Log in"/>
             </div>

@@ -3,9 +3,9 @@ package com.olrox.quiz.websocket;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.process.SoloGameProcess;
 import com.olrox.quiz.service.SoloGameService;
-import com.olrox.quiz.websocket.dto.Answer;
-import com.olrox.quiz.websocket.dto.AnswerResultDto;
-import com.olrox.quiz.websocket.dto.GameProcessInfo;
+import com.olrox.quiz.dto.AnswerDto;
+import com.olrox.quiz.dto.AnswerResultDto;
+import com.olrox.quiz.dto.GameProcessInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,10 +51,10 @@ public class SoloGameController {
     }
 
     @MessageMapping("/solo.game/{id}/answer")
-    public void answer(@DestinationVariable Long id, @Payload Answer answer) {
-        LOG.info("Do answer for game with id {}, answer is {}", id, answer.getValue());
+    public void answer(@DestinationVariable Long id, @Payload AnswerDto answerDto) {
+        LOG.info("Do answer for game with id {}, answer is {}", id, answerDto.getValue());
         var process = soloGameService.getGameProcessById(id);
-        var result = process.doAnswer(answer.getValue());
+        var result = process.doAnswer(answerDto.getValue());
         var dto = AnswerResultDto.from(result);
         LOG.info("Answer result for game with id {}, answer is {}", id, dto);
         messagingTemplate.convertAndSend("/topic/solo.game/" + id + "/answer.res", dto);

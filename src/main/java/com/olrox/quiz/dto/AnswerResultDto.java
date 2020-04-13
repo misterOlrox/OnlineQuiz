@@ -1,4 +1,4 @@
-package com.olrox.quiz.websocket.dto;
+package com.olrox.quiz.dto;
 
 import com.olrox.quiz.entity.AnswerResult;
 import lombok.Data;
