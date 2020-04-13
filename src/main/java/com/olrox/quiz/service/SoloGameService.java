@@ -2,6 +2,7 @@ package com.olrox.quiz.service;
 
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.User;
+import com.olrox.quiz.process.SoloGameProcess;
 import com.olrox.quiz.repository.SoloGameRepository;
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -27,7 +28,7 @@ public class SoloGameService {
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
 
-    private Map<Long, SoloGame> activeGames = new HashMap<>();
+    private Map<Long, SoloGameProcess> activeGames = new HashMap<>();
 
     public Long generateSoloGame(
             User user,
@@ -55,7 +56,8 @@ public class SoloGameService {
         soloGame.setCreationTime(LocalDateTime.now());
 
         soloGameRepository.save(soloGame);
-        activeGames.put(soloGame.getId(), soloGame);
+
+        activeGames.put(soloGame.getId(), new SoloGameProcess(soloGame));
 
         return soloGame.getId();
     }
@@ -72,7 +74,7 @@ public class SoloGameService {
         return soloGameRepository.findAllByCreator(user);
     }
 
-    public SoloGame getGameById(Long id) {
+    public SoloGameProcess getGameProcessById(Long id) {
         return activeGames.get(id);
     }
 }

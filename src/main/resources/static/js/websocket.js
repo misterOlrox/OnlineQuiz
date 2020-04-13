@@ -20,12 +20,10 @@ function onConnected() {
     console.log("On connected event started");
     let gameId = wsContext.gameId;
     if (gameId !== -1) {
-        stompClient.subscribe('/topic/info.game/' + gameId, onMessageReceived);
+        stompClient.subscribe('/topic/solo.game.info/' + gameId, onSoloGameInfoReceived);
+        stompClient.subscribe('/topic/solo.game/' + gameId, onSoloGameReceived);
+        getSoloGameQuestion(gameId);
     }
-    stompClient.send("/chat.addUser",
-        {},
-        JSON.stringify({sender: username, type: 'JOIN'})
-    );
 }
 
 function onError(error) {
@@ -47,8 +45,34 @@ function sendMessage(event) {
     event.preventDefault();
 }
 
-function onMessageReceived(payload) {
+function onSoloGameInfoReceived(payload) {
     console.log("Message received");
+}
+
+function onSoloGameReceived(data) {
+    let question = document.getElementById("question");
+    let qtitle = document.getElementById("qtitle");
+    let btns = document.getElementById("answers");
+
+    let body = JSON.parse(data.body);
+
+    question.innerText = body.question;
+    qtitle.innerText += " " + (body.number + 1);
+    let possAnswers = body.answers;
+    for (let i = 0; i < possAnswers.length; i++) {
+        btns.innerHTML += "<button class=\"button is-rounded is-medium is-success\""
+                            + " style=\"margin-left: 10px;margin-right: 10px;background-color: hsl(160, 60%, 30%)\">"
+                                    + possAnswers[i]
+                        + "</button>";
+    }
+}
+
+function getSoloGameQuestion(id) {
+    stompClient.send("/solo.game/" + id + "/get.question");
+}
+
+function sendAnswerToSoloGame(answer) {
+
 }
 
 connect();
