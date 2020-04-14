@@ -40,4 +40,9 @@ public class MyErrorController implements ErrorController {
 
         return "error";
     }
+
+    public String getErrorView(Model model, String errorDescription) {
+        model.addAttribute("errorDescription", errorDescription);
+        return "error";
+    }
 }

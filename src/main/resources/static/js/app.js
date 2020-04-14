@@ -107,12 +107,21 @@ function postAnswerToSoloGame(event) {
         dataType: 'json',
         timeout: 100000,
         success: function (data) {
-            console.log("SUCCESS: ", data);
-            parseGetQuestionResp(data.nextQuestion);
-            showAnswerResult(data.prevResult);
+            console.log(data);
+            if (data.hasOwnProperty("nextQuestion") && data.hasOwnProperty("prevResult") && data.nextQuestion !== null) {
+                parseGetQuestionResp(data.nextQuestion);
+                showAnswerResult(data.prevResult);
+            } else if (data.prevResult !== null && data.resultId !== null) {
+                showAnswerResult(data.prevResult);
+                window.location.replace("/result/solo/" + data.resultId);
+            }
         },
-        error: function (e) {
-            console.log("ERROR: ", e);
+        error: function (data) {
+            if (data.hasOwnProperty("responseJSON")) {
+                console.log("Error: " + data.responseJSON.errorMessage)
+            } else {
+                console.log("Unknown error");
+            }
         },
         done: function (e) {
             console.log("DONE");

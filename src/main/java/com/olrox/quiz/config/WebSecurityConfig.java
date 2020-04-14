@@ -52,6 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/play/**").hasAuthority(Role.USER.name())
                 .antMatchers("/setup/**").hasAuthority(Role.USER.name())
                 .antMatchers("/game/solo/**").hasAuthority(Role.USER.name())
+                .antMatchers("/result/solo/**").hasAuthority(Role.USER.name())
                 .antMatchers("/add-question").authenticated()
                 .antMatchers("/add-theme").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
                 .antMatchers("/sign-up").not().authenticated()

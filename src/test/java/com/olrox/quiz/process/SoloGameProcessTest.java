@@ -3,6 +3,7 @@ package com.olrox.quiz.process;
 import com.olrox.quiz.entity.AnswerResult;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.SoloGame;
+import com.olrox.quiz.entity.User;
 import com.olrox.quiz.entity.WrongAnswer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ class SoloGameProcessTest {
 
     @Test
     public void testLifecycle() {
+        User participant = new User();
+        participant.setUsername("Tester");
+
         QuizQuestion q1 = new QuizQuestion();
         q1.setCorrectAnswer("a1");
         q1.getWrongAnswers().add(new WrongAnswer("w1"));
@@ -41,7 +45,7 @@ class SoloGameProcessTest {
         q3.getWrongAnswers().add(new WrongAnswer("w3"));
 
         when(soloGame.getQuestionList()).thenReturn(List.of(q1, q2, q3));
-        soloGameProcess = new SoloGameProcess(soloGame);
+        soloGameProcess = new SoloGameProcess(soloGame, participant);
 
         assertEquals(q1, soloGameProcess.getCurrentQuestion());
         assertEquals(0, soloGameProcess.getCurrentQuestionInd());

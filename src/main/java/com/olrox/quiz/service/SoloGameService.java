@@ -1,6 +1,7 @@
 package com.olrox.quiz.service;
 
 import com.olrox.quiz.entity.SoloGame;
+import com.olrox.quiz.entity.SoloGameResult;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.process.SoloGameProcess;
 import com.olrox.quiz.repository.SoloGameRepository;
@@ -27,6 +28,8 @@ public class SoloGameService {
     private SoloGameRepository soloGameRepository;
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+    @Autowired
+    private SoloGameResultService resultService;
 
     private Map<Long, SoloGameProcess> activeGames = new ConcurrentHashMap<>();
 
@@ -57,7 +60,7 @@ public class SoloGameService {
 
         soloGameRepository.save(soloGame);
 
-        activeGames.put(soloGame.getId(), new SoloGameProcess(soloGame));
+        activeGames.put(soloGame.getId(), new SoloGameProcess(soloGame, user));
 
         return soloGame.getId();
     }
@@ -78,7 +81,13 @@ public class SoloGameService {
         return activeGames.get(id);
     }
 
-    public void finishGame(SoloGameProcess process) {
-        activeGames.remove(process.getSoloGame().getId());
+    public SoloGameResult finishGame(SoloGameProcess process) {
+        var gameToFinish = process.getSoloGame();
+        activeGames.remove(gameToFinish.getId());
+
+        gameToFinish.setStatus(SoloGame.Status.FINISHED);
+        soloGameRepository.save(gameToFinish);
+
+        return resultService.saveTotalResult(gameToFinish, process.getParticipant(), process.getResults());
     }
 }

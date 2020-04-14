@@ -4,6 +4,7 @@ import com.olrox.quiz.dto.QuestionDto;
 import com.olrox.quiz.entity.AnswerResult;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.SoloGame;
+import com.olrox.quiz.entity.User;
 import com.olrox.quiz.entity.WrongAnswer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +23,15 @@ public class SoloGameProcess {
     private List<QuizQuestion> questionList;
     private List<AnswerResult> results;
     private volatile boolean finished = false;
+    private User participant;
 
-    public SoloGameProcess(SoloGame soloGame) {
+    public SoloGameProcess(SoloGame soloGame, User participant) {
         this.soloGame = soloGame;
         this.questionList = soloGame.getQuestionList();
         this.questionDtos = questionList.stream().map(QuestionDto::new).collect(Collectors.toList());
         this.currentQuestionInd = 0;
         this.results = new ArrayList<>();
+        this.participant = participant;
     }
 
     public synchronized QuestionDto getCurrentQuestionDto() {
@@ -96,5 +99,13 @@ public class SoloGameProcess {
 
     public synchronized boolean isFinished() {
         return finished;
+    }
+
+    public List<AnswerResult> getResults() {
+        return results;
+    }
+
+    public User getParticipant() {
+        return participant;
     }
 }

@@ -77,7 +77,8 @@ public class SoloGameRestController {
         response.setPrevResult(answerResultDto);
 
         if (process.isFinished()) {
-            soloGameService.finishGame(process);
+            var totalResult = soloGameService.finishGame(process);
+            response.setResultId(totalResult.getId());
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);
