@@ -5,12 +5,16 @@ import com.olrox.quiz.entity.AnswerResult;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.WrongAnswer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SoloGameProcess {
+
+    public static final Logger LOG = LoggerFactory.getLogger(SoloGameProcess.class);
 
     private volatile int currentQuestionInd;
     private SoloGame soloGame;
@@ -28,6 +32,9 @@ public class SoloGameProcess {
     }
 
     public synchronized QuestionDto getCurrentQuestionDto() {
+        if (finished) {
+            return null;
+        }
         var dto = questionDtos.get(currentQuestionInd);
         dto.setNumber(currentQuestionInd);
         return dto;
@@ -39,6 +46,7 @@ public class SoloGameProcess {
 
     public synchronized AnswerResult doAnswer(String answer) {
         if (finished) {
+            LOG.warn("Game process [{}] is finished, answer [{}] is ignored", soloGame.getId(), answer);
             return null;
         }
 
@@ -63,16 +71,19 @@ public class SoloGameProcess {
         results.add(result);
         if (results.size() == questionList.size()) {
             finishGame();
-        } else {
-            currentQuestionInd = results.size();
         }
+
+        currentQuestionInd = results.size();
 
         return result;
     }
 
+    public AnswerResult getLastAnswerResult() {
+        return results.get(currentQuestionInd - 1);
+    }
+
     private synchronized void finishGame() {
         finished = true;
-        currentQuestionInd = -1;
     }
 
     public SoloGame getSoloGame() {

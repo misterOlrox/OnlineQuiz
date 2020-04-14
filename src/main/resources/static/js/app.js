@@ -9,19 +9,19 @@ function getQuestion() {
     soloGameId = wsContext.gameId;
 
     $.ajax({
-        type : "GET",
-        contentType : "application/json",
-        url : "/game/solo/" + soloGameId + "/question",
-        dataType : 'json',
-        timeout : 100000,
-        success : function(data) {
+        type: "GET",
+        contentType: "application/json",
+        url: "/game/solo/" + soloGameId + "/question",
+        dataType: 'json',
+        timeout: 100000,
+        success: function (data) {
             console.log("SUCCESS: ", data);
             parseGetQuestionResp(data);
         },
-        error : function(e) {
+        error: function (e) {
             console.log("ERROR: ", e);
         },
-        done : function(e) {
+        done: function (e) {
             console.log("DONE");
         }
     });
@@ -83,35 +83,38 @@ function parseGetQuestionResp(response) {
     let possAnswers = response.answers;
     for (let i = 0; i < possAnswers.length; i++) {
         let answ = possAnswers[i];
-        btns.innerHTML += "<button name=\"answer\" class=\"button is-rounded is-medium is-success\""
-            + " style=\"margin: 5px 10px;background-color: hsl(160, 60%, 30%)\""
-            + " onclick='postAnswerToSoloGame(\"" + answ.toString() + "\")'>"
+        btns.innerHTML += "<button id=\"btn" + i + "\" name=\"answer\" class=\"button is-rounded is-medium is-success\""
+            + " style=\"margin: 5px 10px;background-color: hsl(160, 60%, 30%)\">"
             + answ
             + "</button>";
     }
+
+    for (let i = 0; i < possAnswers.length; i++) {
+        document.getElementById("btn" + i).addEventListener("click", postAnswerToSoloGame);
+    }
 }
 
-function postAnswerToSoloGame(answer) {
+function postAnswerToSoloGame(event) {
     let answerJson = {
-        value: answer
+        value: event.target.innerText
     };
 
     $.ajax({
-        type : "POST",
-        contentType : "application/json",
-        url : "/game/solo/" + soloGameId + "/answer",
-        data : JSON.stringify(answerJson),
-        dataType : 'json',
-        timeout : 100000,
-        success : function(data) {
+        type: "POST",
+        contentType: "application/json",
+        url: "/game/solo/" + soloGameId + "/answer",
+        data: JSON.stringify(answerJson),
+        dataType: 'json',
+        timeout: 100000,
+        success: function (data) {
             console.log("SUCCESS: ", data);
             parseGetQuestionResp(data.nextQuestion);
             showAnswerResult(data.prevResult);
         },
-        error : function(e) {
+        error: function (e) {
             console.log("ERROR: ", e);
         },
-        done : function(e) {
+        done: function (e) {
             console.log("DONE");
         }
     });

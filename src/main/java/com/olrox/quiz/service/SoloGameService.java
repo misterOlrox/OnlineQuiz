@@ -78,7 +78,6 @@ public class SoloGameService {
         return activeGames.get(id);
     }
 
-    // TODO
     public void finishGame(SoloGameProcess process) {
         activeGames.remove(process.getSoloGame().getId());
     }

@@ -56,6 +56,7 @@ class SoloGameProcessTest {
         assertEquals(expectedResult1, result1);
         assertEquals(q2, soloGameProcess.getCurrentQuestion());
         assertEquals(1, soloGameProcess.getCurrentQuestionInd());
+        assertEquals(expectedResult1, soloGameProcess.getLastAnswerResult());
 
         AnswerResult expectedResult2 = new AnswerResult();
         expectedResult2.setStatus(AnswerResult.Status.CORRECT);
@@ -67,6 +68,7 @@ class SoloGameProcessTest {
         assertEquals(expectedResult2, result2);
         assertEquals(q3, soloGameProcess.getCurrentQuestion());
         assertEquals(2, soloGameProcess.getCurrentQuestionInd());
+        assertEquals(expectedResult2, soloGameProcess.getLastAnswerResult());
 
         AnswerResult expectedResult3 = new AnswerResult();
         expectedResult3.setStatus(AnswerResult.Status.UNKNOWN);
@@ -78,7 +80,8 @@ class SoloGameProcessTest {
         assertEquals(expectedResult3, result3);
         assertNull(soloGameProcess.getCurrentQuestion());
         assertNull(soloGameProcess.doAnswer(""));
-        assertEquals(-1, soloGameProcess.getCurrentQuestionInd());
+        assertEquals(3, soloGameProcess.getCurrentQuestionInd());
         assertTrue(soloGameProcess.isFinished());
+        assertEquals(expectedResult3, soloGameProcess.getLastAnswerResult());
     }
 }

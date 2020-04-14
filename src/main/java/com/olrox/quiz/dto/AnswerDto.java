@@ -1,6 +1,5 @@
 package com.olrox.quiz.dto;
 
-//@Data
 public class AnswerDto {
     private String value;
 
