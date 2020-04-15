@@ -8,6 +8,7 @@ import com.olrox.quiz.entity.User;
 import com.olrox.quiz.entity.WrongAnswer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.util.Pair;
 
 import java.time.Clock;
 import java.util.ArrayList;
@@ -18,12 +19,6 @@ public class SoloGameProcess {
 
     public static final Logger LOG = LoggerFactory.getLogger(SoloGameProcess.class);
 
-    /**
-     * Добавить таску на отправление по сокету инфы о таймауте.
-     * В ответ клиент оптправить пустой ответ.
-     * в doAnswer проверка на таймаут.
-     * Таска может слать несколько таймаутов: каждую четверть отведенного на вопрос времени.
-     */
     private final SoloGame soloGame;
     private final List<QuestionDto> questionDtos;
     private final List<QuizQuestion> questionList;
@@ -31,10 +26,11 @@ public class SoloGameProcess {
     private final User participant;
     private final Clock clock;
     private final long timeForQuestionInMillis;
+    private final long startTimeInMillis;
 
     private volatile int currentQuestionInd;
     private volatile boolean finished = false;
-    private long lastTimestamp;
+    private volatile long lastTimestamp;
 
     public SoloGameProcess(SoloGame soloGame, User participant) {
         this(soloGame, participant, Clock.systemDefaultZone());
@@ -50,6 +46,7 @@ public class SoloGameProcess {
         this.clock = clock;
         this.lastTimestamp = this.clock.millis();
         this.timeForQuestionInMillis = soloGame.getTimeForQuestionInSeconds() * 1000;
+        this.startTimeInMillis = lastTimestamp;
     }
 
     public synchronized QuestionDto getCurrentQuestionDto() {
@@ -75,6 +72,8 @@ public class SoloGameProcess {
             return doTimeout();
         }
 
+        lastTimestamp = clock.millis();
+
         AnswerResult.Status resultStatus = AnswerResult.Status.UNKNOWN;
         QuizQuestion currentQuestion = getCurrentQuestion();
         if (answer.equals(currentQuestion.getCorrectAnswer())) {
@@ -95,6 +94,7 @@ public class SoloGameProcess {
         LOG.info("Timeout for question {} in game with id {}",
                 currentQuestionInd,
                 soloGame.getId());
+        lastTimestamp += timeForQuestionInMillis;
         return addResult(getCurrentQuestion(), AnswerResult.Status.TIMEOUT, null);
     }
 
@@ -140,5 +140,17 @@ public class SoloGameProcess {
 
     public User getParticipant() {
         return participant;
+    }
+
+    public long getTimeForQuestionInMillis() {
+        return timeForQuestionInMillis;
+    }
+
+    public long getStartTimeInMillis() {
+        return startTimeInMillis;
+    }
+
+    public synchronized Pair<Integer, Long> getCurrentIndAndNextTimeout() {
+        return Pair.of(currentQuestionInd, lastTimestamp + timeForQuestionInMillis);
     }
 }

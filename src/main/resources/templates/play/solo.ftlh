@@ -32,6 +32,7 @@
     <script>
         window.onload = function () {
             getQuestion();
+            connect();
         }
     </script>
 </@c.page>

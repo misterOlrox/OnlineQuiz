@@ -3,7 +3,8 @@ package com.olrox.quiz.dto;
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.process.SoloGameProcess;
 
-public class GameProcessInfo {
+public class GameProcessInfo implements InfoDto {
+    private final String type = "game.process.info";
     private Long id;
     private String creator;
     private Integer timeForQuestionInSeconds;
@@ -39,5 +40,10 @@ public class GameProcessInfo {
 
     public SoloGame.Status getStatus() {
         return status;
+    }
+
+    @Override
+    public String getType() {
+        return type;
     }
 }

@@ -4,6 +4,7 @@ let messageInput = document.querySelector('#message');
 let stompClient = null;
 let username = null;
 let soloGameId = null;
+let connectedToWs = false;
 
 function getQuestion() {
     soloGameId = wsContext.gameId;
@@ -27,30 +28,46 @@ function getQuestion() {
     });
 }
 
-// function connect() {
-//     username = wsContext.username;
-//     if (username !== '') {
-//         console.log("Username is " + username);
-//         let socket = new SockJS('/ws');
-//         stompClient = Stomp.over(socket);
-//         stompClient.connect({}, onConnected, onError);
-//     } else {
-//         console.log("Don't open websocket connection: user is not authenticated");
-//     }
-// }
-//
-// function onConnected() {
-//     console.log("On connected event started");
-//     soloGameId = wsContext.gameId;
-//     if (soloGameId !== -1) {
-//         stompClient.subscribe('/topic/solo.game.info/' + soloGameId, onSoloGameInfoReceived);
-//         getSoloGameQuestion(soloGameId);
-//     }
-// }
-//
-// function onError(error) {
-//     console.log("Could't connect through websocket: " + error);
-// }
+function connect() {
+    username = wsContext.username;
+    if (username !== '') {
+        console.log("Username is " + username);
+        let socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, onConnected, onError);
+    } else {
+        console.log("Don't open websocket connection: user is not authenticated");
+    }
+}
+
+function onConnected() {
+    console.log("On connected event started");
+    soloGameId = wsContext.gameId;
+    if (soloGameId !== -1) {
+        connectedToWs = true;
+        stompClient.subscribe('/topic/solo/game/info/' + soloGameId, onSoloGameInfoReceived);
+    }
+}
+
+function onError(error) {
+    console.log("Could't connect through websocket: " + error);
+}
+
+function onSoloGameInfoReceived(data) {
+    let info = JSON.parse(data.body);
+    if (info.type === "timeout.info") {
+        if (info.timeout === true) {
+            postAnswerToSoloGame(null);
+        } else {
+            updateClock(info.timeLeft);
+        }
+    }
+}
+
+function updateClock(timeLeft) {
+    console.log("Time left " + timeLeft);
+}
+
 //
 // function sendMessage(event) {
 //     console.log("Send message started");
@@ -67,9 +84,6 @@ function getQuestion() {
 //     event.preventDefault();
 // }
 //
-// function onSoloGameInfoReceived(payload) {
-//     console.log("Message received");
-// }
 
 function parseGetQuestionResp(response) {
     let question = document.getElementById("question");
@@ -90,13 +104,15 @@ function parseGetQuestionResp(response) {
     }
 
     for (let i = 0; i < possAnswers.length; i++) {
-        document.getElementById("btn" + i).addEventListener("click", postAnswerToSoloGame);
+        document
+            .getElementById("btn" + i)
+            .addEventListener("click", (event) => {postAnswerToSoloGame(event.target.innerText)});
     }
 }
 
-function postAnswerToSoloGame(event) {
+function postAnswerToSoloGame(answer) {
     let answerJson = {
-        value: event.target.innerText
+        value: answer
     };
 
     $.ajax({
