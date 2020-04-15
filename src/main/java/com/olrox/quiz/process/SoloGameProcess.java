@@ -9,6 +9,7 @@ import com.olrox.quiz.entity.WrongAnswer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,21 +18,38 @@ public class SoloGameProcess {
 
     public static final Logger LOG = LoggerFactory.getLogger(SoloGameProcess.class);
 
+    /**
+     * Добавить таску на отправление по сокету инфы о таймауте.
+     * В ответ клиент оптправить пустой ответ.
+     * в doAnswer проверка на таймаут.
+     * Таска может слать несколько таймаутов: каждую четверть отведенного на вопрос времени.
+     */
+    private final SoloGame soloGame;
+    private final List<QuestionDto> questionDtos;
+    private final List<QuizQuestion> questionList;
+    private final List<AnswerResult> results;
+    private final User participant;
+    private final Clock clock;
+    private final long timeForQuestionInMillis;
+
     private volatile int currentQuestionInd;
-    private SoloGame soloGame;
-    private List<QuestionDto> questionDtos;
-    private List<QuizQuestion> questionList;
-    private List<AnswerResult> results;
     private volatile boolean finished = false;
-    private User participant;
+    private long lastTimestamp;
 
     public SoloGameProcess(SoloGame soloGame, User participant) {
+        this(soloGame, participant, Clock.systemDefaultZone());
+    }
+
+    protected SoloGameProcess(SoloGame soloGame, User participant, Clock clock) {
         this.soloGame = soloGame;
         this.questionList = soloGame.getQuestionList();
         this.questionDtos = questionList.stream().map(QuestionDto::new).collect(Collectors.toList());
         this.currentQuestionInd = 0;
         this.results = new ArrayList<>();
         this.participant = participant;
+        this.clock = clock;
+        this.lastTimestamp = this.clock.millis();
+        this.timeForQuestionInMillis = soloGame.getTimeForQuestionInSeconds() * 1000;
     }
 
     public synchronized QuestionDto getCurrentQuestionDto() {
@@ -53,7 +71,10 @@ public class SoloGameProcess {
             return null;
         }
 
-        AnswerResult result = new AnswerResult();
+        if (clock.millis() - lastTimestamp > timeForQuestionInMillis) {
+            return doTimeout();
+        }
+
         AnswerResult.Status resultStatus = AnswerResult.Status.UNKNOWN;
         QuizQuestion currentQuestion = getCurrentQuestion();
         if (answer.equals(currentQuestion.getCorrectAnswer())) {
@@ -67,8 +88,20 @@ public class SoloGameProcess {
             }
         }
 
-        result.setQuizQuestion(currentQuestion);
-        result.setStatus(resultStatus);
+        return addResult(currentQuestion, resultStatus, answer);
+    }
+
+    private AnswerResult doTimeout() {
+        LOG.info("Timeout for question {} in game with id {}",
+                currentQuestionInd,
+                soloGame.getId());
+        return addResult(getCurrentQuestion(), AnswerResult.Status.TIMEOUT, null);
+    }
+
+    private AnswerResult addResult(QuizQuestion quizQuestion, AnswerResult.Status status, String answer) {
+        AnswerResult result = new AnswerResult();
+        result.setQuizQuestion(quizQuestion);
+        result.setStatus(status);
         result.setAnswer(answer);
 
         results.add(result);

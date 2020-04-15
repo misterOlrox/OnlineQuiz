@@ -19,6 +19,7 @@ import static org.mockito.Mockito.when;
 
 class SoloGameProcessTest {
 
+    public static final int TIMEOUT_LIMIT = 5;
     private SoloGameProcess soloGameProcess;
 
     @Mock
@@ -45,6 +46,7 @@ class SoloGameProcessTest {
         q3.getWrongAnswers().add(new WrongAnswer("w3"));
 
         when(soloGame.getQuestionList()).thenReturn(List.of(q1, q2, q3));
+        when(soloGame.getTimeForQuestionInSeconds()).thenReturn(TIMEOUT_LIMIT);
         soloGameProcess = new SoloGameProcess(soloGame, participant);
 
         assertEquals(q1, soloGameProcess.getCurrentQuestion());
