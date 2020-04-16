@@ -50,10 +50,6 @@ public class SoloGameProcess {
     }
 
     public synchronized QuestionDto getCurrentQuestionDto() {
-        if (finished) {
-            return null;
-        }
-
         while (!finished && (clock.millis() - lastTimestamp > timeForQuestionInMillis)) {
             doTimeout();
         }
@@ -64,6 +60,7 @@ public class SoloGameProcess {
 
         var dto = questionDtos.get(currentQuestionInd);
         dto.setNumber(currentQuestionInd);
+        dto.setTimeLeft(getTimeLeftForCurrentQuestion());
         return dto;
     }
 
@@ -89,7 +86,7 @@ public class SoloGameProcess {
 
         AnswerResult.Status resultStatus = AnswerResult.Status.UNKNOWN;
         QuizQuestion currentQuestion = getCurrentQuestion();
-        if (answer.equals(currentQuestion.getCorrectAnswer())) {
+        if (answer != null && answer.equals(currentQuestion.getCorrectAnswer())) {
             resultStatus = AnswerResult.Status.CORRECT;
         } else {
             for (WrongAnswer wrongAnswer : currentQuestion.getWrongAnswers()) {
@@ -163,7 +160,11 @@ public class SoloGameProcess {
         return startTimeInMillis;
     }
 
+    private long getTimeLeftForCurrentQuestion() {
+        return lastTimestamp + timeForQuestionInMillis - clock.millis();
+    }
+
     public synchronized Pair<Integer, Long> getCurrentIndAndNextTimeout() {
-        return Pair.of(currentQuestionInd, lastTimestamp + timeForQuestionInMillis);
+        return Pair.of(currentQuestionInd, getTimeForQuestionInMillis());
     }
 }

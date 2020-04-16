@@ -11,6 +11,7 @@ import java.util.List;
 public class QuestionDto {
     private int number;
     private String question;
+    private long timeLeft;
     private List<String> answers = new ArrayList<>();
 
     public QuestionDto(QuizQuestion quizQuestion) {

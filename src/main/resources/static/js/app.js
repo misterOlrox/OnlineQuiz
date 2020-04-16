@@ -7,6 +7,8 @@ let soloGameId = null;
 let connectedToWs = false;
 let timeForQuestion = null;
 let numberOfQuestions = null;
+let timeLeft = 0;
+let timerId = null;
 
 function getQuestion() {
     soloGameId = wsContext.gameId;
@@ -60,9 +62,8 @@ function onSoloGameInfoReceived(data) {
     if (info.type === "timeout.info") {
         if (info.timeout === true) {
             postAnswerToSoloGame(null);
-        } else {
-            updateClock(info.timeLeft);
         }
+        timeLeft = 0;
     }
     if (info.type === 'game.process.info') {
         timeForQuestion = info.timeForQuestionInMillis;
@@ -72,11 +73,10 @@ function onSoloGameInfoReceived(data) {
             " numberOfQuestions "
             + numberOfQuestions
         );
-        updateClock(timeForQuestion);
     }
 }
 
-function updateClock(timeLeft) {
+function updateClock(update) {
     let timeLeftElem = document.getElementById("timeLeftInfo");
     console.log("Time left " + timeLeft);
     let mins = parseInt( timeLeft / 60000 );
@@ -85,6 +85,12 @@ function updateClock(timeLeft) {
         secs = '0' + secs;
     }
     timeLeftElem.innerText = "Time left - " + mins + ':' + secs;
+    if (!update) {
+        timeLeft -= 100;
+    }
+    if (timeLeft < 0 ) {
+        postAnswerToSoloGame(null);
+    }
 }
 
 //
@@ -109,7 +115,17 @@ function parseGetQuestionResp(nextQuestion) {
     let qtitle = document.getElementById("qtitle");
     let btns = document.getElementById("answers");
 
+    if (nextQuestion == null || !nextQuestion.hasOwnProperty("question")) {
+        window.location.replace("/result/solo/" + soloGameId);
+    }
+
     question.innerText = nextQuestion.question;
+    timeLeft = nextQuestion.timeLeft + 100;
+    if (timerId !== null) {
+        clearTimeout(timerId);
+    }
+    updateClock(false);
+    timerId = setInterval(function () { updateClock(); }, 100);
     qtitle.innerText = 'Question';
     btns.innerHTML = '';
     qtitle.innerText += " " + (nextQuestion.number + 1);
