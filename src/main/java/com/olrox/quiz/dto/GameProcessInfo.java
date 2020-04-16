@@ -7,7 +7,7 @@ public class GameProcessInfo implements InfoDto {
     private final String type = "game.process.info";
     private Long id;
     private String creator;
-    private Integer timeForQuestionInSeconds;
+    private Long timeForQuestionInMillis;
     private Integer numberOfQuestions;
     private SoloGame.Status status;
 
@@ -16,7 +16,7 @@ public class GameProcessInfo implements InfoDto {
         gameProcessInfo.id = soloGameProcess.getSoloGame().getId();
         gameProcessInfo.creator = soloGameProcess.getSoloGame().getCreator().getUsername();
         gameProcessInfo.status = soloGameProcess.getSoloGame().getStatus();
-        gameProcessInfo.timeForQuestionInSeconds = soloGameProcess.getSoloGame().getTimeForQuestionInSeconds();
+        gameProcessInfo.timeForQuestionInMillis = (long) soloGameProcess.getSoloGame().getTimeForQuestionInSeconds() * 1000;
         gameProcessInfo.numberOfQuestions = soloGameProcess.getSoloGame().getNumberOfQuestions();
 
         return gameProcessInfo;
@@ -30,8 +30,8 @@ public class GameProcessInfo implements InfoDto {
         return creator;
     }
 
-    public Integer getTimeForQuestionInSeconds() {
-        return timeForQuestionInSeconds;
+    public Long getTimeForQuestionInMillis() {
+        return timeForQuestionInMillis;
     }
 
     public Integer getNumberOfQuestions() {

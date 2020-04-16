@@ -4,6 +4,7 @@ import com.olrox.quiz.dto.AnswerDto;
 import com.olrox.quiz.dto.AnswerResultDto;
 import com.olrox.quiz.dto.ErrorDto;
 import com.olrox.quiz.dto.NextQuestionAndPrevResultDto;
+import com.olrox.quiz.service.SoloGameResultService;
 import com.olrox.quiz.service.SoloGameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,8 @@ public class SoloGameRestController {
 
     @Autowired
     private SoloGameService soloGameService;
+    @Autowired
+    private SoloGameResultService soloGameResultService;
 
     @GetMapping("/game/solo/{id}/question")
     public ResponseEntity<?> getQuestion(@PathVariable Long id) {
@@ -59,9 +62,16 @@ public class SoloGameRestController {
         LOG.info("Do answer for game with id {}, answer is {}", id, answerDto.getValue());
         var process = soloGameService.getGameProcessById(id);
         if (process == null) {
-            return new ResponseEntity<>(
-                    new ErrorDto("Game process doesn't exists"),
-                    HttpStatus.NOT_FOUND);
+            Long resultId = soloGameResultService.getResultIdBySoloGameId(id);
+            if (resultId != null) {
+                var response = new NextQuestionAndPrevResultDto();
+                response.setResultId(resultId);
+                return new ResponseEntity<>(response, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(
+                        new ErrorDto("Game process doesn't exists"),
+                        HttpStatus.NOT_FOUND);
+            }
         }
 
         var result = process.doAnswer(answerDto.getValue());

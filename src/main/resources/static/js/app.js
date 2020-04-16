@@ -5,6 +5,8 @@ let stompClient = null;
 let username = null;
 let soloGameId = null;
 let connectedToWs = false;
+let timeForQuestion = null;
+let numberOfQuestions = null;
 
 function getQuestion() {
     soloGameId = wsContext.gameId;
@@ -62,10 +64,27 @@ function onSoloGameInfoReceived(data) {
             updateClock(info.timeLeft);
         }
     }
+    if (info.type === 'game.process.info') {
+        timeForQuestion = info.timeForQuestionInMillis;
+        numberOfQuestions = info.numberOfQuestions;
+        console.log("Get game.process.info: timeForQuestion:"
+            +timeForQuestion +
+            " numberOfQuestions "
+            + numberOfQuestions
+        );
+        updateClock(timeForQuestion);
+    }
 }
 
 function updateClock(timeLeft) {
+    let timeLeftElem = document.getElementById("timeLeftInfo");
     console.log("Time left " + timeLeft);
+    let mins = parseInt( timeLeft / 60000 );
+    let secs = parseInt((timeLeft - mins * 60000)/1000);
+    if (secs <= 9) {
+        secs = '0' + secs;
+    }
+    timeLeftElem.innerText = "Time left - " + mins + ':' + secs;
 }
 
 //
@@ -85,16 +104,16 @@ function updateClock(timeLeft) {
 // }
 //
 
-function parseGetQuestionResp(response) {
+function parseGetQuestionResp(nextQuestion) {
     let question = document.getElementById("question");
     let qtitle = document.getElementById("qtitle");
     let btns = document.getElementById("answers");
 
-    question.innerText = response.question;
+    question.innerText = nextQuestion.question;
     qtitle.innerText = 'Question';
     btns.innerHTML = '';
-    qtitle.innerText += " " + (response.number + 1);
-    let possAnswers = response.answers;
+    qtitle.innerText += " " + (nextQuestion.number + 1);
+    let possAnswers = nextQuestion.answers;
     for (let i = 0; i < possAnswers.length; i++) {
         let answ = possAnswers[i];
         btns.innerHTML += "<button id=\"btn" + i + "\" name=\"answer\" class=\"button is-rounded is-medium is-success\""
@@ -130,6 +149,8 @@ function postAnswerToSoloGame(answer) {
             } else if (data.prevResult !== null && data.resultId !== null) {
                 showAnswerResult(data.prevResult);
                 window.location.replace("/result/solo/" + data.resultId);
+            } else {
+                window.location.reload();
             }
         },
         error: function (data) {

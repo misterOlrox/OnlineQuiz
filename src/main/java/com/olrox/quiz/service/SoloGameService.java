@@ -18,6 +18,7 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -88,6 +89,10 @@ public class SoloGameService {
         return activeGames.get(id);
     }
 
+    public Optional<SoloGame> getGame(Long id) {
+        return soloGameRepository.findById(id);
+    }
+
     public SoloGameResult finishGame(SoloGameProcess process) {
         var gameToFinish = process.getSoloGame();
         activeGames.remove(gameToFinish.getId());
@@ -112,7 +117,7 @@ public class SoloGameService {
             int i = 0;
             while (!process.isFinished()) {
                 try {
-                    Thread.sleep(2500);
+                    Thread.sleep(500);
                 } catch (InterruptedException ex) {
                     LOG.warn("Task with id [{}] was interrupted", id);
                 }

@@ -25,6 +25,9 @@
                 <h4 class="subtitle">
                     Your game id: ${gameId}
                 </h4>
+                <h4 id="timeLeftInfo" class="subtitle">
+                    Time left - ...
+                </h4>
             </div>
         </div>
     </section>

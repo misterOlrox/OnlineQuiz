@@ -33,4 +33,8 @@ public class SoloGameResultService {
         return resultRepository.findById(id);
     }
 
+    public Long getResultIdBySoloGameId(Long soloGameId) {
+        return resultRepository.findSoloGameResultByParentId(soloGameId);
+    }
+
 }

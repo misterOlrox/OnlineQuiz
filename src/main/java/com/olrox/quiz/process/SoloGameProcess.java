@@ -53,12 +53,25 @@ public class SoloGameProcess {
         if (finished) {
             return null;
         }
+
+        while (!finished && (clock.millis() - lastTimestamp > timeForQuestionInMillis)) {
+            doTimeout();
+        }
+
+        if (finished) {
+            return null;
+        }
+
         var dto = questionDtos.get(currentQuestionInd);
         dto.setNumber(currentQuestionInd);
         return dto;
     }
 
     public synchronized QuizQuestion getCurrentQuestion() {
+        while (!finished && (clock.millis() - lastTimestamp > timeForQuestionInMillis)) {
+            doTimeout();
+        }
+
         return finished ? null : questionList.get(currentQuestionInd);
     }
 
@@ -95,7 +108,7 @@ public class SoloGameProcess {
                 currentQuestionInd,
                 soloGame.getId());
         lastTimestamp += timeForQuestionInMillis;
-        return addResult(getCurrentQuestion(), AnswerResult.Status.TIMEOUT, null);
+        return addResult(questionList.get(currentQuestionInd), AnswerResult.Status.TIMEOUT, null);
     }
 
     private AnswerResult addResult(QuizQuestion quizQuestion, AnswerResult.Status status, String answer) {
