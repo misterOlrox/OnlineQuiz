@@ -14,10 +14,16 @@ public class GameProcessInfo implements InfoDto {
     public static GameProcessInfo from(SoloGameProcess soloGameProcess) {
         GameProcessInfo gameProcessInfo = new GameProcessInfo();
         gameProcessInfo.id = soloGameProcess.getSoloGame().getId();
-        gameProcessInfo.creator = soloGameProcess.getSoloGame().getCreator().getUsername();
+        gameProcessInfo.creator = soloGameProcess.getSoloGame().getParticipant().getUsername();
         gameProcessInfo.status = soloGameProcess.getSoloGame().getStatus();
-        gameProcessInfo.timeForQuestionInMillis = (long) soloGameProcess.getSoloGame().getTimeForQuestionInSeconds() * 1000;
-        gameProcessInfo.numberOfQuestions = soloGameProcess.getSoloGame().getNumberOfQuestions();
+        gameProcessInfo.timeForQuestionInMillis = (long) soloGameProcess
+                                                            .getSoloGame()
+                                                            .getPrototype()
+                                                            .getTimeForQuestionInSeconds() * 1000;
+        gameProcessInfo.numberOfQuestions = soloGameProcess
+                                                .getSoloGame()
+                                                .getPrototype()
+                                                .getNumberOfQuestions();
 
         return gameProcessInfo;
     }

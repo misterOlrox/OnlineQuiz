@@ -1,8 +1,8 @@
 package com.olrox.quiz.controller.common.game;
 
 import com.olrox.quiz.controller.common.MyErrorController;
-import com.olrox.quiz.entity.SoloGameResult;
-import com.olrox.quiz.service.SoloGameResultService;
+import com.olrox.quiz.entity.SoloGame;
+import com.olrox.quiz.service.SoloGameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,21 +15,21 @@ import java.util.Optional;
 public class GameResultController {
 
     @Autowired
-    private SoloGameResultService soloGameResultService;
+    private SoloGameService soloGameService;
     @Autowired
     private MyErrorController myErrorController;
 
     @GetMapping("/result/solo/{id}")
     public String getResultSolo(@PathVariable Long id, Model model) {
-        Optional<SoloGameResult> optional = soloGameResultService.find(id);
+        Optional<SoloGame> optional = soloGameService.findFinishedGame(id);
 
         if (optional.isEmpty()) {
             return myErrorController.getErrorView(model, "There isn't any results with id: " + id);
         }
 
-        SoloGameResult result = optional.get();
+        SoloGame result = optional.get();
         model.addAttribute("result", result);
-        model.addAttribute("game", result.getParent());
+        model.addAttribute("game", result.getPrototype());
 
         return "result/solo";
     }

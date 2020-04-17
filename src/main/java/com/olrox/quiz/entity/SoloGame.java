@@ -6,18 +6,17 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "solo_game_table")
 public class SoloGame {
     public enum Status {
         IN_PROGRESS,
-        FINISHED
+        FINISHED,
+        INTERRUPTED
     }
 
     @Id
@@ -25,18 +24,16 @@ public class SoloGame {
     private Long id;
 
     @ManyToOne
-    private User creator;
+    private SoloGamePrototype prototype;
 
-    private Integer timeForQuestionInSeconds;
-    private Integer numberOfQuestions;
-
-    @ManyToMany
-    private List<QuizQuestion> questionList;
-
-    private LocalDateTime creationTime;
+    @ManyToOne
+    private User participant;
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    private LocalDateTime creationTime;
+    private int correctAnswersCount = 0;
 
     public Long getId() {
         return id;
@@ -46,36 +43,20 @@ public class SoloGame {
         this.id = id;
     }
 
-    public User getCreator() {
-        return creator;
+    public SoloGamePrototype getPrototype() {
+        return prototype;
     }
 
-    public void setCreator(User creator) {
-        this.creator = creator;
+    public void setPrototype(SoloGamePrototype prototype) {
+        this.prototype = prototype;
     }
 
-    public Integer getTimeForQuestionInSeconds() {
-        return timeForQuestionInSeconds;
+    public User getParticipant() {
+        return participant;
     }
 
-    public void setTimeForQuestionInSeconds(Integer timeForQuestionInSeconds) {
-        this.timeForQuestionInSeconds = timeForQuestionInSeconds;
-    }
-
-    public Integer getNumberOfQuestions() {
-        return numberOfQuestions;
-    }
-
-    public void setNumberOfQuestions(Integer numberOfQuestions) {
-        this.numberOfQuestions = numberOfQuestions;
-    }
-
-    public List<QuizQuestion> getQuestionList() {
-        return questionList;
-    }
-
-    public void setQuestionList(List<QuizQuestion> questionList) {
-        this.questionList = questionList;
+    public void setParticipant(User creator) {
+        this.participant = creator;
     }
 
     public Status getStatus() {
@@ -94,16 +75,23 @@ public class SoloGame {
         this.creationTime = started;
     }
 
+    public int getCorrectAnswersCount() {
+        return correctAnswersCount;
+    }
+
+    public void setCorrectAnswersCount(int correctAnswersCount) {
+        this.correctAnswersCount = correctAnswersCount;
+    }
+
     @Override
     public String toString() {
         return "SoloGame{" +
                 "id=" + id +
-                ", creator=" + creator +
-                ", timeForQuestionInSeconds=" + timeForQuestionInSeconds +
-                ", numberOfQuestions=" + numberOfQuestions +
-                ", questionList=" + questionList +
+                ", prototype=" + prototype +
+                ", participant=" + participant +
                 ", creationTime=" + creationTime +
                 ", status=" + status +
+                ", correctAnswersCount=" + correctAnswersCount +
                 '}';
     }
 }

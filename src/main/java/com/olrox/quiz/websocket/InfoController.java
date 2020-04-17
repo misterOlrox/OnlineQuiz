@@ -33,7 +33,7 @@ public class InfoController {
     @SubscribeMapping("/topic/solo/game/info/{id}")
     public GameProcessInfo gameInfo(@DestinationVariable Long id, @AuthenticationPrincipal User user) {
         SoloGameProcess gameProcess = soloGameService.getGameProcessById(id);
-        if (!gameProcess.getSoloGame().getCreator().getUsername().equals(user.getUsername())) {
+        if (!gameProcess.getSoloGame().getParticipant().getUsername().equals(user.getUsername())) {
             throw new RuntimeException("Access denied for game with id " + id);
         }
 

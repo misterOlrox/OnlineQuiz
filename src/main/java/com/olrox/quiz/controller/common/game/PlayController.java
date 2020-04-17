@@ -1,9 +1,9 @@
 package com.olrox.quiz.controller.common.game;
 
 import com.olrox.quiz.controller.common.MyErrorController;
+import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.process.SoloGameProcess;
-import com.olrox.quiz.service.SoloGameResultService;
 import com.olrox.quiz.service.SoloGameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,26 +18,24 @@ public class PlayController {
     @Autowired
     private SoloGameService soloGameService;
     @Autowired
-    private SoloGameResultService soloGameResultService;
-    @Autowired
     private MyErrorController errorController;
 
     @GetMapping("/play/solo/{id}")
     public String playSolo(@PathVariable Long id, @AuthenticationPrincipal User user, Model model) {
         SoloGameProcess soloGameProcess = soloGameService.getGameProcessById(id);
         if (soloGameProcess == null) {
-            Long resultId = soloGameResultService.getResultIdBySoloGameId(id);
-            if (resultId != null) {
+            SoloGame finishedGame = soloGameService.findFinishedGame(id).orElse(null);
+            if (finishedGame != null) {
                 return "redirect:/result/solo/" + id;
             } else {
                 return errorController.getErrorView(model, "No such game process");
             }
         }
-        if (soloGameProcess.isFinished()) {
+        if (soloGameProcess.isFinished() || soloGameProcess.getCurrentQuestion() == null) {
             var result = soloGameService.finishGame(soloGameProcess);
             return "redirect:/result/solo/" + result.getId();
         }
-        if (!soloGameProcess.getSoloGame().getCreator().equals(user)) {
+        if (!soloGameProcess.getSoloGame().getParticipant().equals(user)) {
             return errorController.getErrorView(model, "This game isn't yours");
         }
 

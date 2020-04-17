@@ -6,5 +6,5 @@ import lombok.Data;
 public class NextQuestionAndPrevResultDto {
     private AnswerResultDto prevResult;
     private QuestionDto nextQuestion;
-    private Long resultId;
+    private boolean isEnded;
 }

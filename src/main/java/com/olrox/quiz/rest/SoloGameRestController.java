@@ -4,6 +4,7 @@ import com.olrox.quiz.dto.AnswerDto;
 import com.olrox.quiz.dto.AnswerResultDto;
 import com.olrox.quiz.dto.ErrorDto;
 import com.olrox.quiz.dto.NextQuestionAndPrevResultDto;
+import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.service.SoloGameResultService;
 import com.olrox.quiz.service.SoloGameService;
 import org.slf4j.Logger;
@@ -62,10 +63,10 @@ public class SoloGameRestController {
         LOG.info("Do answer for game with id {}, answer is {}", id, answerDto.getValue());
         var process = soloGameService.getGameProcessById(id);
         if (process == null) {
-            Long resultId = soloGameResultService.getResultIdBySoloGameId(id);
-            if (resultId != null) {
+            SoloGame finishedGame = soloGameService.findFinishedGame(id).orElse(null);
+            if (finishedGame != null) {
                 var response = new NextQuestionAndPrevResultDto();
-                response.setResultId(resultId);
+                response.setEnded(true);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(
@@ -88,7 +89,7 @@ public class SoloGameRestController {
 
         if (process.isFinished()) {
             var totalResult = soloGameService.finishGame(process);
-            response.setResultId(totalResult.getId());
+            response.setEnded(true);
         }
 
         return new ResponseEntity<>(response, HttpStatus.OK);

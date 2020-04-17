@@ -4,7 +4,6 @@ import com.olrox.quiz.dto.QuestionDto;
 import com.olrox.quiz.entity.AnswerResult;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.SoloGame;
-import com.olrox.quiz.entity.User;
 import com.olrox.quiz.entity.WrongAnswer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,6 @@ public class SoloGameProcess {
     private final List<QuestionDto> questionDtos;
     private final List<QuizQuestion> questionList;
     private final List<AnswerResult> results;
-    private final User participant;
     private final Clock clock;
     private final long timeForQuestionInMillis;
     private final long startTimeInMillis;
@@ -32,20 +30,19 @@ public class SoloGameProcess {
     private volatile boolean finished = false;
     private volatile long lastTimestamp;
 
-    public SoloGameProcess(SoloGame soloGame, User participant) {
-        this(soloGame, participant, Clock.systemDefaultZone());
+    public SoloGameProcess(SoloGame soloGame) {
+        this(soloGame, Clock.systemDefaultZone());
     }
 
-    protected SoloGameProcess(SoloGame soloGame, User participant, Clock clock) {
+    protected SoloGameProcess(SoloGame soloGame, Clock clock) {
         this.soloGame = soloGame;
-        this.questionList = soloGame.getQuestionList();
+        this.questionList = soloGame.getPrototype().getQuestionList();
         this.questionDtos = questionList.stream().map(QuestionDto::new).collect(Collectors.toList());
         this.currentQuestionInd = 0;
         this.results = new ArrayList<>();
-        this.participant = participant;
         this.clock = clock;
         this.lastTimestamp = this.clock.millis();
-        this.timeForQuestionInMillis = soloGame.getTimeForQuestionInSeconds() * 1000;
+        this.timeForQuestionInMillis = soloGame.getPrototype().getTimeForQuestionInSeconds() * 1000;
         this.startTimeInMillis = lastTimestamp;
     }
 
@@ -146,10 +143,6 @@ public class SoloGameProcess {
 
     public List<AnswerResult> getResults() {
         return results;
-    }
-
-    public User getParticipant() {
-        return participant;
     }
 
     public long getTimeForQuestionInMillis() {

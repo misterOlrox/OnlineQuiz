@@ -1,7 +1,6 @@
 package com.olrox.quiz.service;
 
 import com.olrox.quiz.entity.SoloGame;
-import com.olrox.quiz.entity.SoloGameResult;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.process.SoloGameProcess;
 import com.olrox.quiz.repository.SoloGameRepository;
@@ -31,6 +30,8 @@ public class SoloGameService {
     private SimpMessagingTemplate messagingTemplate;
     @Autowired
     private SoloGameResultService resultService;
+    @Autowired
+    private SoloGamePrototypeService prototypeService;
 
     private Map<Long, SoloGameProcess> activeGames = new ConcurrentHashMap<>();
 
@@ -51,17 +52,18 @@ public class SoloGameService {
                     "Haven't any questions for themes " + new JSONArray(themesIds));
         }
 
+        // FIXME maybe need to add game to prototype set
+        var prototype = prototypeService.createPrototype(user, questions, timeForQuestionInSeconds);
+
         SoloGame soloGame = new SoloGame();
-        soloGame.setCreator(user);
-        soloGame.setTimeForQuestionInSeconds(timeForQuestionInSeconds);
+        soloGame.setParticipant(user);
         soloGame.setStatus(SoloGame.Status.IN_PROGRESS);
-        soloGame.setNumberOfQuestions(foundSize);
-        soloGame.setQuestionList(questions);
         soloGame.setCreationTime(LocalDateTime.now());
+        soloGame.setPrototype(prototype);
 
         soloGameRepository.save(soloGame);
 
-        SoloGameProcess newProcess = new SoloGameProcess(soloGame, user);
+        SoloGameProcess newProcess = new SoloGameProcess(soloGame);
         activeGames.put(soloGame.getId(), newProcess);
 
         return soloGame.getId();
@@ -75,10 +77,6 @@ public class SoloGameService {
         return soloGameRepository.findAllByStatusEquals(SoloGame.Status.IN_PROGRESS);
     }
 
-    public List<SoloGame> getGamesCreatedBy(User user) {
-        return soloGameRepository.findAllByCreator(user);
-    }
-
     public SoloGameProcess getGameProcessById(Long id) {
         return activeGames.get(id);
     }
@@ -87,13 +85,20 @@ public class SoloGameService {
         return soloGameRepository.findById(id);
     }
 
-    public SoloGameResult finishGame(SoloGameProcess process) {
+    public SoloGame finishGame(SoloGameProcess process) {
         var gameToFinish = process.getSoloGame();
         activeGames.remove(gameToFinish.getId());
 
         gameToFinish.setStatus(SoloGame.Status.FINISHED);
-        soloGameRepository.save(gameToFinish);
+        gameToFinish.setCorrectAnswersCount(
+                resultService.countCorrectAnswers(process.getResults()));
 
-        return resultService.saveTotalResult(gameToFinish, process.getParticipant(), process.getResults());
+        return soloGameRepository.save(gameToFinish);
+
+        // return resultService.saveTotalResult(gameToFinish, process.getParticipant(), process.getResults());
+    }
+
+    public Optional<SoloGame> findFinishedGame(Long id) {
+        return soloGameRepository.findFirstByIdEqualsAndStatusEquals(id, SoloGame.Status.FINISHED);
     }
 }

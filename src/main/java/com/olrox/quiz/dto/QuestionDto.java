@@ -9,9 +9,9 @@ import java.util.List;
 
 @Data
 public class QuestionDto {
-    private int number;
+    private Integer number;
     private String question;
-    private long timeLeft;
+    private Long timeLeft;
     private List<String> answers = new ArrayList<>();
 
     public QuestionDto(QuizQuestion quizQuestion) {

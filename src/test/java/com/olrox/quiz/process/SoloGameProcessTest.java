@@ -3,6 +3,7 @@ package com.olrox.quiz.process;
 import com.olrox.quiz.entity.AnswerResult;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.SoloGame;
+import com.olrox.quiz.entity.SoloGamePrototype;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.entity.WrongAnswer;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,6 +27,8 @@ class SoloGameProcessTest {
 
     @Mock
     private SoloGame soloGame;
+    @Mock
+    private SoloGamePrototype soloGamePrototype;
 
     @BeforeEach
     public void prepare() {
@@ -47,9 +50,10 @@ class SoloGameProcessTest {
         q3.setCorrectAnswer("a3");
         q3.getWrongAnswers().add(new WrongAnswer("w3"));
 
-        when(soloGame.getQuestionList()).thenReturn(List.of(q1, q2, q3));
-        when(soloGame.getTimeForQuestionInSeconds()).thenReturn(TIMEOUT_LIMIT);
-        soloGameProcess = new SoloGameProcess(soloGame, participant);
+        when(soloGame.getPrototype()).thenReturn(soloGamePrototype);
+        when(soloGamePrototype.getQuestionList()).thenReturn(List.of(q1, q2, q3));
+        when(soloGamePrototype.getTimeForQuestionInSeconds()).thenReturn(TIMEOUT_LIMIT);
+        soloGameProcess = new SoloGameProcess(soloGame);
 
         assertEquals(q1, soloGameProcess.getCurrentQuestion());
         assertEquals(0, soloGameProcess.getCurrentQuestionInd());
@@ -119,9 +123,10 @@ class SoloGameProcessTest {
         q3.setCorrectAnswer("a3");
         q3.getWrongAnswers().add(new WrongAnswer("w3"));
 
-        when(soloGame.getQuestionList()).thenReturn(List.of(q1, q2, q3));
-        when(soloGame.getTimeForQuestionInSeconds()).thenReturn(TIMEOUT_LIMIT);
-        soloGameProcess = new SoloGameProcess(soloGame, participant, clock);
+        when(soloGame.getPrototype()).thenReturn(soloGamePrototype);
+        when(soloGamePrototype.getQuestionList()).thenReturn(List.of(q1, q2, q3));
+        when(soloGamePrototype.getTimeForQuestionInSeconds()).thenReturn(TIMEOUT_LIMIT);
+        soloGameProcess = new SoloGameProcess(soloGame, clock);
 
         assertEquals(q1, soloGameProcess.getCurrentQuestion());
         assertEquals(0, soloGameProcess.getCurrentQuestionInd());
