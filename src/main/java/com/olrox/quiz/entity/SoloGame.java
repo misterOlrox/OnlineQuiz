@@ -6,6 +6,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
@@ -24,6 +25,7 @@ public class SoloGame {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "prototype_id", nullable = false)
     private SoloGamePrototype prototype;
 
     @ManyToOne

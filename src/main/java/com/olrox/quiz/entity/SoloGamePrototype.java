@@ -1,6 +1,8 @@
 package com.olrox.quiz.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -23,7 +25,8 @@ public class SoloGamePrototype {
     @ManyToOne
     private User creator;
 
-    @OneToMany
+    @OneToMany(mappedBy = "prototype", cascade = {CascadeType.ALL},
+            fetch = FetchType.LAZY, orphanRemoval = true)
     private Set<SoloGame> soloGames = new HashSet<>();
 
     @ManyToMany

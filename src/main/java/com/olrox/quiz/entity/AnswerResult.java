@@ -2,6 +2,8 @@ package com.olrox.quiz.entity;
 
 import java.util.Objects;
 
+//@Entity
+//@Table(name = "solo_game_answers_table")
 public class AnswerResult {
     public enum Status {
         CORRECT,

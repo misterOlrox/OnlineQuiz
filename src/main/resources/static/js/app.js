@@ -78,7 +78,6 @@ function onSoloGameInfoReceived(data) {
 
 function updateClock(update) {
     let timeLeftElem = document.getElementById("timeLeftInfo");
-    console.log("Time left " + timeLeft);
     let mins = parseInt(timeLeft / 60000);
     let secs = parseInt((timeLeft - mins * 60000) / 1000);
     if (secs <= 9) {
@@ -89,6 +88,7 @@ function updateClock(update) {
         timeLeft -= 100;
     }
     if (timeLeft < 0) {
+        console.log("Time left < 0, postingAnswer null");
         postAnswerToSoloGame(null);
     }
 }
