@@ -32,8 +32,8 @@ public class PlayController {
             }
         }
         if (soloGameProcess.isFinished() || soloGameProcess.getCurrentQuestion() == null) {
-            var result = soloGameService.finishGame(soloGameProcess);
-            return "redirect:/result/solo/" + result.getId();
+            soloGameService.finishGame(soloGameProcess);
+            return "redirect:/result/solo/" + id;
         }
         if (!soloGameProcess.getSoloGame().getParticipant().equals(user)) {
             return errorController.getErrorView(model, "This game isn't yours");

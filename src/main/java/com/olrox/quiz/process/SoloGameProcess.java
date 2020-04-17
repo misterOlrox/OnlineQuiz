@@ -1,13 +1,12 @@
 package com.olrox.quiz.process;
 
 import com.olrox.quiz.dto.QuestionDto;
-import com.olrox.quiz.entity.AnswerResult;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.SoloGame;
+import com.olrox.quiz.entity.UserAnswer;
 import com.olrox.quiz.entity.WrongAnswer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.util.Pair;
 
 import java.time.Clock;
 import java.util.ArrayList;
@@ -21,7 +20,7 @@ public class SoloGameProcess {
     private final SoloGame soloGame;
     private final List<QuestionDto> questionDtos;
     private final List<QuizQuestion> questionList;
-    private final List<AnswerResult> results;
+    private final List<UserAnswer> userAnswers;
     private final Clock clock;
     private final long timeForQuestionInMillis;
     private final long startTimeInMillis;
@@ -39,7 +38,7 @@ public class SoloGameProcess {
         this.questionList = soloGame.getPrototype().getQuestionList();
         this.questionDtos = questionList.stream().map(QuestionDto::new).collect(Collectors.toList());
         this.currentQuestionInd = 0;
-        this.results = new ArrayList<>();
+        this.userAnswers = new ArrayList<>();
         this.clock = clock;
         this.lastTimestamp = this.clock.millis();
         this.timeForQuestionInMillis = soloGame.getPrototype().getTimeForQuestionInSeconds() * 1000;
@@ -69,7 +68,7 @@ public class SoloGameProcess {
         return finished ? null : questionList.get(currentQuestionInd);
     }
 
-    public synchronized AnswerResult doAnswer(String answer) {
+    public synchronized UserAnswer doAnswer(String answer) {
         if (finished) {
             LOG.warn("Game process [{}] is finished, answer [{}] is ignored", soloGame.getId(), answer);
             return null;
@@ -81,14 +80,14 @@ public class SoloGameProcess {
 
         lastTimestamp = clock.millis();
 
-        AnswerResult.Status resultStatus = AnswerResult.Status.UNKNOWN;
+        UserAnswer.Status resultStatus = UserAnswer.Status.UNKNOWN;
         QuizQuestion currentQuestion = getCurrentQuestion();
         if (answer != null && answer.equals(currentQuestion.getCorrectAnswer())) {
-            resultStatus = AnswerResult.Status.CORRECT;
+            resultStatus = UserAnswer.Status.CORRECT;
         } else {
             for (WrongAnswer wrongAnswer : currentQuestion.getWrongAnswers()) {
                 if (wrongAnswer.getValue().equals(answer)) {
-                    resultStatus = AnswerResult.Status.WRONG;
+                    resultStatus = UserAnswer.Status.WRONG;
                     break;
                 }
             }
@@ -97,32 +96,33 @@ public class SoloGameProcess {
         return addResult(currentQuestion, resultStatus, answer);
     }
 
-    private AnswerResult doTimeout() {
+    private UserAnswer doTimeout() {
         LOG.info("Timeout for question {} in game with id {}",
                 currentQuestionInd,
                 soloGame.getId());
         lastTimestamp += timeForQuestionInMillis;
-        return addResult(questionList.get(currentQuestionInd), AnswerResult.Status.TIMEOUT, null);
+        return addResult(questionList.get(currentQuestionInd), UserAnswer.Status.TIMEOUT, null);
     }
 
-    private AnswerResult addResult(QuizQuestion quizQuestion, AnswerResult.Status status, String answer) {
-        AnswerResult result = new AnswerResult();
+    private UserAnswer addResult(QuizQuestion quizQuestion, UserAnswer.Status status, String answer) {
+        UserAnswer result = new UserAnswer();
         result.setQuizQuestion(quizQuestion);
         result.setStatus(status);
         result.setAnswer(answer);
+        result.setGame(soloGame);
 
-        results.add(result);
-        if (results.size() == questionList.size()) {
+        userAnswers.add(result);
+        if (userAnswers.size() == questionList.size()) {
             finishGame();
         }
 
-        currentQuestionInd = results.size();
+        currentQuestionInd = userAnswers.size();
 
         return result;
     }
 
-    public AnswerResult getLastAnswerResult() {
-        return results.get(currentQuestionInd - 1);
+    public UserAnswer getLastAnswerResult() {
+        return userAnswers.get(currentQuestionInd - 1);
     }
 
     private synchronized void finishGame() {
@@ -141,8 +141,8 @@ public class SoloGameProcess {
         return finished;
     }
 
-    public List<AnswerResult> getResults() {
-        return results;
+    public List<UserAnswer> getUserAnswers() {
+        return userAnswers;
     }
 
     public long getTimeForQuestionInMillis() {
@@ -155,9 +155,5 @@ public class SoloGameProcess {
 
     private long getTimeLeftForCurrentQuestion() {
         return lastTimestamp + timeForQuestionInMillis - clock.millis();
-    }
-
-    public synchronized Pair<Integer, Long> getCurrentIndAndNextTimeout() {
-        return Pair.of(currentQuestionInd, getTimeForQuestionInMillis());
     }
 }

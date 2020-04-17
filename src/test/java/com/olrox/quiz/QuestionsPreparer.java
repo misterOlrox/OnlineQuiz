@@ -103,11 +103,11 @@ class QuestionsPreparer {
     @Disabled("Database already filled")
     @Test
     public void addQuestionsToDatabase() throws IOException {
-        User admin = userService.findAdmin();
-        if (admin == null) {
-            admin = userService.signUp("admin", "admin");
-            userService.updateRoles(admin, Set.of(Role.ADMIN, Role.USER));
-        }
+        User admin = userService.findAdmin().orElseGet(() -> {
+            var alt = userService.signUp("admin", "admin");
+            userService.updateRoles(alt, Set.of(Role.ADMIN, Role.USER));
+            return alt;
+        });
 
         FileReader fileReader = new FileReader("parsed-questions0.txt");
         BufferedReader reader = new BufferedReader(fileReader);

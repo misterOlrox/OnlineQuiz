@@ -1,6 +1,6 @@
 package com.olrox.quiz.process;
 
-import com.olrox.quiz.entity.AnswerResult;
+import com.olrox.quiz.entity.UserAnswer;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.SoloGamePrototype;
@@ -58,36 +58,36 @@ class SoloGameProcessTest {
         assertEquals(q1, soloGameProcess.getCurrentQuestion());
         assertEquals(0, soloGameProcess.getCurrentQuestionInd());
 
-        AnswerResult expectedResult1 = new AnswerResult();
-        expectedResult1.setStatus(AnswerResult.Status.WRONG);
+        UserAnswer expectedResult1 = new UserAnswer();
+        expectedResult1.setStatus(UserAnswer.Status.WRONG);
         expectedResult1.setQuizQuestion(q1);
         expectedResult1.setAnswer("w1");
 
-        AnswerResult result1 = soloGameProcess.doAnswer("w1");
+        UserAnswer result1 = soloGameProcess.doAnswer("w1");
 
         assertEquals(expectedResult1, result1);
         assertEquals(q2, soloGameProcess.getCurrentQuestion());
         assertEquals(1, soloGameProcess.getCurrentQuestionInd());
         assertEquals(expectedResult1, soloGameProcess.getLastAnswerResult());
 
-        AnswerResult expectedResult2 = new AnswerResult();
-        expectedResult2.setStatus(AnswerResult.Status.CORRECT);
+        UserAnswer expectedResult2 = new UserAnswer();
+        expectedResult2.setStatus(UserAnswer.Status.CORRECT);
         expectedResult2.setQuizQuestion(q2);
         expectedResult2.setAnswer("a2");
 
-        AnswerResult result2 = soloGameProcess.doAnswer("a2");
+        UserAnswer result2 = soloGameProcess.doAnswer("a2");
 
         assertEquals(expectedResult2, result2);
         assertEquals(q3, soloGameProcess.getCurrentQuestion());
         assertEquals(2, soloGameProcess.getCurrentQuestionInd());
         assertEquals(expectedResult2, soloGameProcess.getLastAnswerResult());
 
-        AnswerResult expectedResult3 = new AnswerResult();
-        expectedResult3.setStatus(AnswerResult.Status.UNKNOWN);
+        UserAnswer expectedResult3 = new UserAnswer();
+        expectedResult3.setStatus(UserAnswer.Status.UNKNOWN);
         expectedResult3.setQuizQuestion(q3);
         expectedResult3.setAnswer("unknown");
 
-        AnswerResult result3 = soloGameProcess.doAnswer("unknown");
+        UserAnswer result3 = soloGameProcess.doAnswer("unknown");
 
         assertEquals(expectedResult3, result3);
         assertNull(soloGameProcess.getCurrentQuestion());
@@ -96,9 +96,9 @@ class SoloGameProcessTest {
         assertTrue(soloGameProcess.isFinished());
         assertEquals(expectedResult3, soloGameProcess.getLastAnswerResult());
 
-        assertEquals(soloGameProcess.getResults().get(0), expectedResult1);
-        assertEquals(soloGameProcess.getResults().get(1), expectedResult2);
-        assertEquals(soloGameProcess.getResults().get(2), expectedResult3);
+        assertEquals(soloGameProcess.getUserAnswers().get(0), expectedResult1);
+        assertEquals(soloGameProcess.getUserAnswers().get(1), expectedResult2);
+        assertEquals(soloGameProcess.getUserAnswers().get(2), expectedResult3);
     }
 
     @Test
@@ -132,12 +132,12 @@ class SoloGameProcessTest {
         assertEquals(0, soloGameProcess.getCurrentQuestionInd());
 
         when(clock.millis()).thenReturn(TIMEPOINT_1);
-        AnswerResult expectedResult1 = new AnswerResult();
-        expectedResult1.setStatus(AnswerResult.Status.WRONG);
+        UserAnswer expectedResult1 = new UserAnswer();
+        expectedResult1.setStatus(UserAnswer.Status.WRONG);
         expectedResult1.setQuizQuestion(q1);
         expectedResult1.setAnswer("w1");
 
-        AnswerResult result1 = soloGameProcess.doAnswer("w1");
+        UserAnswer result1 = soloGameProcess.doAnswer("w1");
 
         assertEquals(expectedResult1, result1);
         assertEquals(q2, soloGameProcess.getCurrentQuestion());
@@ -145,12 +145,12 @@ class SoloGameProcessTest {
         assertEquals(expectedResult1, soloGameProcess.getLastAnswerResult());
 
         when(clock.millis()).thenReturn(TIMEPOINT_2);
-        AnswerResult expectedResult2 = new AnswerResult();
-        expectedResult2.setStatus(AnswerResult.Status.TIMEOUT);
+        UserAnswer expectedResult2 = new UserAnswer();
+        expectedResult2.setStatus(UserAnswer.Status.TIMEOUT);
         expectedResult2.setQuizQuestion(q2);
         expectedResult2.setAnswer(null);
 
-        AnswerResult result2 = soloGameProcess.doAnswer("a2");
+        UserAnswer result2 = soloGameProcess.doAnswer("a2");
 
         assertEquals(expectedResult2, result2);
         assertEquals(q3, soloGameProcess.getCurrentQuestion());
@@ -158,12 +158,12 @@ class SoloGameProcessTest {
         assertEquals(expectedResult2, soloGameProcess.getLastAnswerResult());
 
         when(clock.millis()).thenReturn(TIMEPOINT_3);
-        AnswerResult expectedResult3 = new AnswerResult();
-        expectedResult3.setStatus(AnswerResult.Status.UNKNOWN);
+        UserAnswer expectedResult3 = new UserAnswer();
+        expectedResult3.setStatus(UserAnswer.Status.UNKNOWN);
         expectedResult3.setQuizQuestion(q3);
         expectedResult3.setAnswer("unknown");
 
-        AnswerResult result3 = soloGameProcess.doAnswer("unknown");
+        UserAnswer result3 = soloGameProcess.doAnswer("unknown");
 
         assertEquals(expectedResult3, result3);
         assertNull(soloGameProcess.getCurrentQuestion());
@@ -172,8 +172,8 @@ class SoloGameProcessTest {
         assertTrue(soloGameProcess.isFinished());
         assertEquals(expectedResult3, soloGameProcess.getLastAnswerResult());
 
-        assertEquals(soloGameProcess.getResults().get(0), expectedResult1);
-        assertEquals(soloGameProcess.getResults().get(1), expectedResult2);
-        assertEquals(soloGameProcess.getResults().get(2), expectedResult3);
+        assertEquals(soloGameProcess.getUserAnswers().get(0), expectedResult1);
+        assertEquals(soloGameProcess.getUserAnswers().get(1), expectedResult2);
+        assertEquals(soloGameProcess.getUserAnswers().get(2), expectedResult3);
     }
 }

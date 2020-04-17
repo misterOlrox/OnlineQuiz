@@ -5,7 +5,6 @@ import com.olrox.quiz.dto.AnswerResultDto;
 import com.olrox.quiz.dto.ErrorDto;
 import com.olrox.quiz.dto.NextQuestionAndPrevResultDto;
 import com.olrox.quiz.entity.SoloGame;
-import com.olrox.quiz.service.SoloGameResultService;
 import com.olrox.quiz.service.SoloGameService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +24,6 @@ public class SoloGameRestController {
 
     @Autowired
     private SoloGameService soloGameService;
-    @Autowired
-    private SoloGameResultService soloGameResultService;
 
     @GetMapping("/game/solo/{id}/question")
     public ResponseEntity<?> getQuestion(@PathVariable Long id) {
@@ -88,7 +85,7 @@ public class SoloGameRestController {
         response.setPrevResult(answerResultDto);
 
         if (process.isFinished()) {
-            var totalResult = soloGameService.finishGame(process);
+            soloGameService.finishGame(process);
             response.setEnded(true);
         }
 

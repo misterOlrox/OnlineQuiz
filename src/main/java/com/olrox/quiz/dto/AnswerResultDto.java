@@ -1,21 +1,21 @@
 package com.olrox.quiz.dto;
 
-import com.olrox.quiz.entity.AnswerResult;
+import com.olrox.quiz.entity.UserAnswer;
 import lombok.Data;
 
 @Data
 public class AnswerResultDto {
     private String yourAnswer;
     private String correctAnswer;
-    private AnswerResult.Status status;
+    private UserAnswer.Status status;
     private String question;
 
-    public static AnswerResultDto from(AnswerResult answerResult) {
+    public static AnswerResultDto from(UserAnswer userAnswer) {
         AnswerResultDto dto = new AnswerResultDto();
-        dto.status = answerResult.getStatus();
-        dto.correctAnswer = answerResult.getQuizQuestion().getCorrectAnswer();
-        dto.yourAnswer = answerResult.getAnswer();
-        dto.question = answerResult.getQuizQuestion().getQuestion();
+        dto.status = userAnswer.getStatus();
+        dto.correctAnswer = userAnswer.getQuizQuestion().getCorrectAnswer();
+        dto.yourAnswer = userAnswer.getAnswer();
+        dto.question = userAnswer.getQuizQuestion().getQuestion();
 
         return dto;
     }

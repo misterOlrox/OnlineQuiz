@@ -2,13 +2,14 @@ package com.olrox.quiz.service;
 
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.User;
+import com.olrox.quiz.entity.UserAnswer;
 import com.olrox.quiz.process.SoloGameProcess;
 import com.olrox.quiz.repository.SoloGameRepository;
+import com.olrox.quiz.repository.UserAnswerRepository;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -23,15 +24,13 @@ public class SoloGameService {
     private final static Logger LOG = LoggerFactory.getLogger(SoloGameService.class);
 
     @Autowired
-    private QuizQuestionService quizQuestionService;
-    @Autowired
     private SoloGameRepository soloGameRepository;
     @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-    @Autowired
-    private SoloGameResultService resultService;
+    private UserAnswerRepository userAnswerRepository;
     @Autowired
     private SoloGamePrototypeService prototypeService;
+    @Autowired
+    private QuizQuestionService quizQuestionService;
 
     private Map<Long, SoloGameProcess> activeGames = new ConcurrentHashMap<>();
 
@@ -52,7 +51,6 @@ public class SoloGameService {
                     "Haven't any questions for themes " + new JSONArray(themesIds));
         }
 
-        // FIXME maybe need to add game to prototype set
         var prototype = prototypeService.createPrototype(user, questions, timeForQuestionInSeconds);
 
         SoloGame soloGame = new SoloGame();
@@ -85,17 +83,29 @@ public class SoloGameService {
         return soloGameRepository.findById(id);
     }
 
-    public SoloGame finishGame(SoloGameProcess process) {
+    public void finishGame(SoloGameProcess process) {
         var gameToFinish = process.getSoloGame();
+
+        if (gameToFinish.getStatus() == SoloGame.Status.FINISHED) {
+            LOG.warn("Game [{}] already finished", gameToFinish);
+            return;
+        }
+
         activeGames.remove(gameToFinish.getId());
 
+        var userAnswers = process.getUserAnswers();
         gameToFinish.setStatus(SoloGame.Status.FINISHED);
-        gameToFinish.setCorrectAnswersCount(
-                resultService.countCorrectAnswers(process.getResults()));
+        gameToFinish.setCorrectAnswersCount(countCorrectAnswers(userAnswers));
 
-        return soloGameRepository.save(gameToFinish);
+        soloGameRepository.save(gameToFinish);
+        userAnswerRepository.saveAll(userAnswers);
+        LOG.info("Game [{}] finished, answers are saved", gameToFinish);
+    }
 
-        // return resultService.saveTotalResult(gameToFinish, process.getParticipant(), process.getResults());
+    private int countCorrectAnswers(List<UserAnswer> userAnswers) {
+        return (int) userAnswers.stream()
+                .filter(x -> x.getStatus() == UserAnswer.Status.CORRECT)
+                .count();
     }
 
     public Optional<SoloGame> findFinishedGame(Long id) {

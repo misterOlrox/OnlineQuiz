@@ -100,13 +100,8 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public User findAdmin() {
-        Long adminId = userRepository.findAdminId();
-        if (adminId == null) {
-            return null;
-        }
-        Optional<User> optionalUser = userRepository.findById(adminId);
-        return optionalUser.orElse(null);
+    public Optional<User> findAdmin() {
+        return userRepository.findFirstByRolesContaining(Role.ADMIN);
     }
 
     public User updateRoles(User user, Set<Role> roles) {
