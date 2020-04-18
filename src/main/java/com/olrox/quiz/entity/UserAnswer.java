@@ -90,4 +90,15 @@ public class UserAnswer {
     public int hashCode() {
         return Objects.hash(game, quizQuestion, answer, status);
     }
+
+    @Override
+    public String toString() {
+        return "UserAnswer{" +
+                "id=" + id +
+                ", game=" + game +
+                ", quizQuestion=" + quizQuestion +
+                ", status=" + status +
+                ", answer='" + answer + '\'' +
+                '}';
+    }
 }

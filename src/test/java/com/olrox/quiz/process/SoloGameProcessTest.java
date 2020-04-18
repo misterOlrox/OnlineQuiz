@@ -62,6 +62,7 @@ class SoloGameProcessTest {
         expectedResult1.setStatus(UserAnswer.Status.WRONG);
         expectedResult1.setQuizQuestion(q1);
         expectedResult1.setAnswer("w1");
+        expectedResult1.setGame(soloGame);
 
         UserAnswer result1 = soloGameProcess.doAnswer("w1");
 
@@ -74,6 +75,7 @@ class SoloGameProcessTest {
         expectedResult2.setStatus(UserAnswer.Status.CORRECT);
         expectedResult2.setQuizQuestion(q2);
         expectedResult2.setAnswer("a2");
+        expectedResult2.setGame(soloGame);
 
         UserAnswer result2 = soloGameProcess.doAnswer("a2");
 
@@ -86,6 +88,7 @@ class SoloGameProcessTest {
         expectedResult3.setStatus(UserAnswer.Status.UNKNOWN);
         expectedResult3.setQuizQuestion(q3);
         expectedResult3.setAnswer("unknown");
+        expectedResult3.setGame(soloGame);
 
         UserAnswer result3 = soloGameProcess.doAnswer("unknown");
 
@@ -136,6 +139,7 @@ class SoloGameProcessTest {
         expectedResult1.setStatus(UserAnswer.Status.WRONG);
         expectedResult1.setQuizQuestion(q1);
         expectedResult1.setAnswer("w1");
+        expectedResult1.setGame(soloGame);
 
         UserAnswer result1 = soloGameProcess.doAnswer("w1");
 
@@ -149,6 +153,7 @@ class SoloGameProcessTest {
         expectedResult2.setStatus(UserAnswer.Status.TIMEOUT);
         expectedResult2.setQuizQuestion(q2);
         expectedResult2.setAnswer(null);
+        expectedResult2.setGame(soloGame);
 
         UserAnswer result2 = soloGameProcess.doAnswer("a2");
 
@@ -162,6 +167,7 @@ class SoloGameProcessTest {
         expectedResult3.setStatus(UserAnswer.Status.UNKNOWN);
         expectedResult3.setQuizQuestion(q3);
         expectedResult3.setAnswer("unknown");
+        expectedResult3.setGame(soloGame);
 
         UserAnswer result3 = soloGameProcess.doAnswer("unknown");
 
