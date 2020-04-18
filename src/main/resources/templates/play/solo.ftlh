@@ -8,6 +8,12 @@
                     Question
                 </h1>
                 <h2 id="question" class="subtitle"></h2>
+
+                <progress id="progress-bar"
+                          class="progress"
+                          value="0"
+                          max="100">
+                </progress>
             </div>
         </div>
     </section>

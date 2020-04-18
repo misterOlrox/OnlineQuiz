@@ -73,6 +73,8 @@ function onSoloGameInfoReceived(data) {
             " numberOfQuestions "
             + numberOfQuestions
         );
+        let progressBar = document.getElementById("progress-bar");
+        progressBar.max = numberOfQuestions;
     }
 }
 
@@ -118,6 +120,7 @@ function parseGetQuestionResp(nextQuestion) {
     let question = document.getElementById("question");
     let qtitle = document.getElementById("qtitle");
     let btns = document.getElementById("answers");
+    let progressBar = document.getElementById("progress-bar");
 
     question.innerText = nextQuestion.question;
     timeLeft = nextQuestion.timeLeft + 100;
@@ -131,6 +134,7 @@ function parseGetQuestionResp(nextQuestion) {
     qtitle.innerText = 'Question';
     btns.innerHTML = '';
     qtitle.innerText += " " + (nextQuestion.number + 1);
+    progressBar.value = nextQuestion.number;
     let possAnswers = nextQuestion.answers;
     for (let i = 0; i < possAnswers.length; i++) {
         let answ = possAnswers[i];
