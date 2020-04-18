@@ -7,7 +7,6 @@ import com.olrox.quiz.entity.WrongAnswer;
 import com.olrox.quiz.repository.QuizQuestionRepository;
 import com.olrox.quiz.repository.QuizQuestionThemeRepository;
 import com.olrox.quiz.util.RandomUtil;
-import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,8 +70,6 @@ public class QuizQuestionService {
             List<Long> selectedThemes
     ) {
 
-        String wrongAnswersJson = (new JSONArray(wrongAnswers)).toString();
-
         boolean approved = author.isAdmin();
         QuizQuestion quizQuestion = getQuizQuestionWithFields(
                 author,
@@ -114,5 +111,9 @@ public class QuizQuestionService {
         var randomQuestionIds = RandomUtil.pickNRandomElements(questionsIds, number);
 
         return quizQuestionRepository.findAllById(randomQuestionIds);
+    }
+
+    public List<QuizQuestion> findAllByThemeId(Long themeId) {
+        return quizQuestionRepository.findAllByThemeId(themeId);
     }
 }

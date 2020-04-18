@@ -1,4 +1,4 @@
-package com.olrox.quiz.controller.common;
+package com.olrox.quiz.controller.common.adding;
 
 import com.olrox.quiz.entity.QuizQuestionTheme;
 import com.olrox.quiz.entity.User;

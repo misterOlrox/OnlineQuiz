@@ -48,26 +48,31 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/static/**", "/intro/*", "/webjars/**", "/images/**", "/js/**").permitAll()
+                .antMatchers("/static/**", "/webjars/**", "/images/**", "/js/**").permitAll()
+                .antMatchers("/", "/intro/*", "/api/content/**").permitAll()
                 .antMatchers("/play/**").hasAuthority(Role.USER.name())
                 .antMatchers("/setup/**").hasAuthority(Role.USER.name())
-                .antMatchers("/game/solo/**").hasAuthority(Role.USER.name())
+                .antMatchers("/api/game/solo/**").hasAuthority(Role.USER.name())
                 .antMatchers("/result/solo/**").hasAuthority(Role.USER.name())
                 .antMatchers("/user/**").authenticated()
                 .antMatchers("/add-question").authenticated()
                 .antMatchers("/add-theme").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
+                .antMatchers("/add-prototype").authenticated()
                 .antMatchers("/sign-up").not().authenticated()
                 .anyRequest().authenticated()
+
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .defaultSuccessUrl("/", true)
                 .permitAll()
+
                 .and()
-                .rememberMe()
+                .rememberMe().alwaysRemember(true)
                 .and()
                 .logout()
                 .permitAll()
+
                 .and()
                 .csrf().disable();
     }

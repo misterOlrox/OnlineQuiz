@@ -44,6 +44,9 @@
                     <a class="navbar-item" href="/intro/solo">
                         Solo
                     </a>
+                    <a class="navbar-item" href="/add-prototype">
+                        Add quiz
+                    </a>
                 </div>
             </div>
 

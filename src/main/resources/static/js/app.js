@@ -16,7 +16,7 @@ function getQuestion() {
     $.ajax({
         type: "GET",
         contentType: "application/json",
-        url: "/game/solo/" + soloGameId + "/question",
+        url: "/api/game/solo/" + soloGameId + "/question",
         dataType: 'json',
         timeout: 100000,
         success: function (data) {
@@ -161,7 +161,7 @@ function postAnswerToSoloGame(answer) {
     $.ajax({
         type: "POST",
         contentType: "application/json",
-        url: "/game/solo/" + soloGameId + "/answer",
+        url: "/api/game/solo/" + soloGameId + "/answer",
         data: JSON.stringify(answerJson),
         dataType: 'json',
         timeout: 100000,

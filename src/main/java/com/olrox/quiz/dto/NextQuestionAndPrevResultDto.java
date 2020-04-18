@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class NextQuestionAndPrevResultDto {
     private AnswerResultDto prevResult;
-    private QuestionDto nextQuestion;
+    private QuestionToGameDto nextQuestion;
     private boolean isEnded;
 }

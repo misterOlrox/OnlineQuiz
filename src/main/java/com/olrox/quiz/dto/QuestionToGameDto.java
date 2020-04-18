@@ -8,13 +8,13 @@ import java.util.Collections;
 import java.util.List;
 
 @Data
-public class QuestionDto {
+public class QuestionToGameDto {
     private Integer number;
     private String question;
     private Long timeLeft;
     private List<String> answers = new ArrayList<>();
 
-    public QuestionDto(QuizQuestion quizQuestion) {
+    public QuestionToGameDto(QuizQuestion quizQuestion) {
         this.question = quizQuestion.getQuestion();
 
         answers.add(quizQuestion.getCorrectAnswer());

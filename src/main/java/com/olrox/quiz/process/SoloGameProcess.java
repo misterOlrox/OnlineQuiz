@@ -1,6 +1,6 @@
 package com.olrox.quiz.process;
 
-import com.olrox.quiz.dto.QuestionDto;
+import com.olrox.quiz.dto.QuestionToGameDto;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.UserAnswer;
@@ -18,7 +18,7 @@ public class SoloGameProcess {
     public static final Logger LOG = LoggerFactory.getLogger(SoloGameProcess.class);
 
     private final SoloGame soloGame;
-    private final List<QuestionDto> questionDtos;
+    private final List<QuestionToGameDto> questionDtos;
     private final List<QuizQuestion> questionList;
     private final List<UserAnswer> userAnswers;
     private final Clock clock;
@@ -36,7 +36,7 @@ public class SoloGameProcess {
     protected SoloGameProcess(SoloGame soloGame, Clock clock) {
         this.soloGame = soloGame;
         this.questionList = soloGame.getPrototype().getQuestionList();
-        this.questionDtos = questionList.stream().map(QuestionDto::new).collect(Collectors.toList());
+        this.questionDtos = questionList.stream().map(QuestionToGameDto::new).collect(Collectors.toList());
         this.currentQuestionInd = 0;
         this.userAnswers = new ArrayList<>();
         this.clock = clock;
@@ -45,7 +45,7 @@ public class SoloGameProcess {
         this.startTimeInMillis = lastTimestamp;
     }
 
-    public synchronized QuestionDto getCurrentQuestionDto() {
+    public synchronized QuestionToGameDto getCurrentQuestionDto() {
         while (!finished && (clock.millis() - lastTimestamp > timeForQuestionInMillis)) {
             doTimeout();
         }

@@ -13,4 +13,7 @@ public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long
     @Query("select q.id from QuizQuestion q join q.themes t where t.id in :themesIds")
     Set<Long> getQuestionIdsByThemes(@Param("themesIds") List<Long> themesIds);
 
+    @Query("select q from QuizQuestion q join q.themes t where t.id=:themeId")
+    List<QuizQuestion> findAllByThemeId(@Param("themeId") Long themeId);
+
 }

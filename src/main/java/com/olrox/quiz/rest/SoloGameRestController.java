@@ -30,7 +30,7 @@ public class SoloGameRestController {
     @Autowired
     private SoloGameService soloGameService;
 
-    @GetMapping("/game/solo/{id}/question")
+    @GetMapping("/api/game/solo/{id}/question")
     public ResponseEntity<?> getQuestion(
             @PathVariable Long id, @AuthenticationPrincipal User user) {
 
@@ -44,7 +44,7 @@ public class SoloGameRestController {
         return new ResponseEntity<>(process.getCurrentQuestionDto(), HttpStatus.OK);
     }
 
-    @GetMapping("/game/solo/{id}/result")
+    @GetMapping("/api/game/solo/{id}/result")
     public ResponseEntity<?> getLastResultAnswer(
             @PathVariable Long id, @AuthenticationPrincipal User user) {
 
@@ -63,7 +63,7 @@ public class SoloGameRestController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/game/solo/{id}/answer")
+    @PostMapping("/api/game/solo/{id}/answer")
     public ResponseEntity<?> postAnswer(
             @PathVariable Long id,
             @RequestBody AnswerDto answerDto,

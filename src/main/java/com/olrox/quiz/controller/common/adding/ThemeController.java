@@ -1,4 +1,4 @@
-package com.olrox.quiz.controller.common;
+package com.olrox.quiz.controller.common.adding;
 
 import com.olrox.quiz.service.QuizQuestionThemeService;
 import org.slf4j.Logger;
@@ -16,8 +16,8 @@ public class ThemeController {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(ThemeController.class);
 
-    @Autowired private QuizQuestionThemeService quizQuestionThemeService;
-
+    @Autowired
+    private QuizQuestionThemeService quizQuestionThemeService;
 
     @GetMapping("/add-theme")
     public String addTheme() {
