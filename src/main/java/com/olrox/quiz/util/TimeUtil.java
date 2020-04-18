@@ -1,5 +1,9 @@
 package com.olrox.quiz.util;
 
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+
 public abstract class TimeUtil {
 
     public static int getTimeInSecondsFromStringWithMinuteAndSecond(String time) {
@@ -9,5 +13,21 @@ public abstract class TimeUtil {
         int seconds = Integer.parseInt(parsedTime[1]);
 
         return minutes * 60 + seconds;
+    }
+
+    public static String getStringFrom(LocalDateTime localDateTime) {
+        if (localDateTime == null) {
+            return "";
+        }
+        return localDateTime.getDayOfMonth() + " "
+                + StringUtils.capitalize(localDateTime.getMonth().toString().toLowerCase()) + " "
+                + localDateTime.getYear() + ", "
+                + addZeroIfLessThenTen(localDateTime.getHour()) + ":"
+                + addZeroIfLessThenTen(localDateTime.getMinute()) + ":"
+                + addZeroIfLessThenTen(localDateTime.getSecond());
+    }
+
+    public static String addZeroIfLessThenTen(int number) {
+        return number < 10 ? "0" + number : String.valueOf(number);
     }
 }

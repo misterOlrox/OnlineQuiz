@@ -32,6 +32,11 @@
                     <p></p>
                     ${finishedGame.correctAnswersCount} / ${prototype.numberOfQuestions} questions.
                 </h4>
+                <h6 class="subtitle">
+                    Game started on ${finishedGame.getCreationTimeString()}
+                    <p></p>
+                    And finished on ${finishedGame.getFinishTimeString()}
+                </h6>
             </div>
         </div>
     </section>

@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -95,6 +96,7 @@ public class SoloGameService {
 
         var userAnswers = process.getUserAnswers();
         gameToFinish.setStatus(SoloGame.Status.FINISHED);
+        gameToFinish.setFinishTime(LocalDateTime.now());
         gameToFinish.setCorrectAnswersCount(countCorrectAnswers(userAnswers));
 
         soloGameRepository.save(gameToFinish);
@@ -110,5 +112,10 @@ public class SoloGameService {
 
     public Optional<SoloGame> findFinishedGame(Long id) {
         return soloGameRepository.findFirstByIdEqualsAndStatusEquals(id, SoloGame.Status.FINISHED);
+    }
+
+    @Transactional
+    public List<SoloGame> findGamesByParticipant(User participant) {
+        return soloGameRepository.findAllByParticipant(participant);
     }
 }

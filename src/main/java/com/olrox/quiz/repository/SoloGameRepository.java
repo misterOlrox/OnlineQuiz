@@ -11,6 +11,9 @@ public interface SoloGameRepository extends JpaRepository<SoloGame, Long> {
 
     List<SoloGame> findAllByParticipant(User participant);
 
+//    @Query("select game from SoloGame game join fetch SoloGamePrototype where :participant = game.participant")
+//    List<SoloGame> findAllByParticipant(@Param("participant") User participant);
+
     List<SoloGame> findAllByStatusEquals(SoloGame.Status status);
 
     List<SoloGame> deleteAllByStatusEquals(SoloGame.Status status);

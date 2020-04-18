@@ -16,27 +16,33 @@
     <div id="navbarExampleTransparentExample" class="navbar-menu">
         <div class="navbar-start">
             <#if user??>
-            <a class="navbar-item" href="user/profile">
-                Profile
-            </a>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="/user/profile">
+                        ${user.username}
+                    </a>
+                    <div class="navbar-dropdown is-boxed">
+                        <a class="navbar-item" href="/user/profile">
+                            Your profile
+                        </a>
+                        <a class="navbar-item" href="/user/games">
+                            Your games
+                        </a>
+
+                        <hr class="navbar-divider">
+                        <a class="navbar-item" style="color: crimson" href="/logout">
+                            Sign-out
+                        </a>
+                    </div>
+                </div>
             </#if>
+
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link" href="/">
+                <a class="navbar-link">
                     Quiz
                 </a>
                 <div class="navbar-dropdown is-boxed">
                     <a class="navbar-item" href="/intro/solo">
                         Solo
-                    </a>
-                    <a class="navbar-item" href="https://bulma.io/documentation/form/general/">
-                        Form
-                    </a>
-                    <hr class="navbar-divider">
-                    <a class="navbar-item" href="https://bulma.io/documentation/elements/box/">
-                        Elements
-                    </a>
-                    <a class="navbar-item is-active" href="https://bulma.io/documentation/components/breadcrumb/">
-                        Components
                     </a>
                 </div>
             </div>
