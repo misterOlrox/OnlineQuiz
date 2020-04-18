@@ -89,11 +89,9 @@ public class SoloGame {
     public String toString() {
         return "SoloGame{" +
                 "id=" + id +
-                ", prototype=" + prototype +
+                ", prototypeId=" + prototype.getId() +
                 ", participant=" + participant +
-                ", creationTime=" + creationTime +
                 ", status=" + status +
-                ", correctAnswersCount=" + correctAnswersCount +
                 '}';
     }
 }

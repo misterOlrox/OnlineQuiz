@@ -3,6 +3,7 @@ package com.olrox.quiz.controller.common.game;
 import com.olrox.quiz.controller.common.MyErrorController;
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.service.SoloGameService;
+import com.olrox.quiz.service.UserAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,8 @@ public class GameResultController {
     @Autowired
     private SoloGameService soloGameService;
     @Autowired
+    private UserAnswerService userAnswerService;
+    @Autowired
     private MyErrorController myErrorController;
 
     @GetMapping("/result/solo/{id}")
@@ -27,9 +30,11 @@ public class GameResultController {
             return myErrorController.getErrorView(model, "There isn't any results with id: " + id);
         }
 
-        SoloGame result = optional.get();
-        model.addAttribute("result", result);
-        model.addAttribute("game", result.getPrototype());
+        SoloGame finishedGame = optional.get();
+        var userAnswerList = userAnswerService.findUserAnswers(finishedGame);
+        model.addAttribute("finishedGame", finishedGame);
+        model.addAttribute("prototype", finishedGame.getPrototype());
+        model.addAttribute("userAnswerList", userAnswerList);
 
         return "result/solo";
     }
