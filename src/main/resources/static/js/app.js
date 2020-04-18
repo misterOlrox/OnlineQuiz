@@ -195,5 +195,31 @@ function postAnswerToSoloGame(answer) {
 }
 
 function showAnswerResult(data) {
-
+    let notificationBox = document.getElementById("prevInfo");
+    if (data) {
+        if (data.status === "CORRECT") {
+            notificationBox.innerHTML = "Your answer was correct!";
+            notificationBox.className = "notification is-success is-light";
+        } else if (data.status === "WRONG") {
+            notificationBox.innerHTML =
+                "<p>Your previous answer was incorrect!</p>"
+                + "<p>Correct answer: " + data.correctAnswer + "</p>"
+                + "<p>Your answer: " + data.yourAnswer + "</p>";
+            notificationBox.className = "notification is-danger is-light";
+        } else if (data.status === "UNKNOWN") {
+            notificationBox.innerHTML =
+                "<p>Your previous answer was incorrect!</p>"
+                + "<p>Correct answer: " + data.correctAnswer + "</p>";
+            notificationBox.className = "notification is-danger is-light";
+        } else if (data.status === "TIMEOUT") {
+            notificationBox.innerHTML = "You were late with the answer";
+            notificationBox.className = "notification is-warning is-light";
+        } else {
+            notificationBox.hidden = true;
+            return;
+        }
+        notificationBox.hidden = false;
+    } else {
+        notificationBox.hidden = true;
+    }
 }

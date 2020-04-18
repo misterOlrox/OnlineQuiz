@@ -28,6 +28,12 @@
                 <h4 id="timeLeftInfo" class="subtitle">
                     Time left - ...
                 </h4>
+
+                <p></p>
+
+                <div id="prevInfo" hidden class="notification">
+                    Info about your last answer
+                </div>
             </div>
         </div>
     </section>
