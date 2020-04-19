@@ -20,4 +20,7 @@ public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long
 
     @Query("select q from QuizQuestion q join q.themes t where t.id=:themeId")
     Page<QuizQuestion> findAllByThemeId(@Param("themeId") Long themeId, Pageable pageable);
+
+    @Query("select q from QuizQuestion q where q.author.id=:userId")
+    Page<QuizQuestion> findPrivateQuestions(@Param("userId") Long userId, Pageable pageable);
 }

@@ -2,6 +2,8 @@ package com.olrox.quiz.entity;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +20,11 @@ import java.util.Set;
 @Entity
 @Table(name = "solo_game_prototype_table")
 public class SoloGamePrototype {
+    public enum Type {
+        SOLO,
+        SHARED
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,6 +38,9 @@ public class SoloGamePrototype {
 
     @ManyToMany
     private List<QuizQuestion> questionList = new ArrayList<>();
+
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     private Integer timeForQuestionInSeconds;
     private Integer numberOfQuestions;
@@ -65,6 +75,14 @@ public class SoloGamePrototype {
 
     public void setQuestionList(List<QuizQuestion> questionList) {
         this.questionList = questionList;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
     }
 
     public Integer getTimeForQuestionInSeconds() {

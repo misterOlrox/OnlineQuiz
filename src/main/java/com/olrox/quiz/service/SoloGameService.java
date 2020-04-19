@@ -29,7 +29,7 @@ public class SoloGameService {
     @Autowired
     private UserAnswerRepository userAnswerRepository;
     @Autowired
-    private SoloGamePrototypeService prototypeService;
+    private GamePrototypeService prototypeService;
     @Autowired
     private QuizQuestionService quizQuestionService;
 

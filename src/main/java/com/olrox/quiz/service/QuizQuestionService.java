@@ -115,11 +115,19 @@ public class QuizQuestionService {
         return quizQuestionRepository.findAllById(randomQuestionIds);
     }
 
+    public List<QuizQuestion> findAllById(List<Long> quizQuestionIds) {
+        return quizQuestionRepository.findAllById(quizQuestionIds);
+    }
+
     public List<QuizQuestion> findAllByThemeId(Long themeId) {
         return quizQuestionRepository.findAllByThemeId(themeId);
     }
 
     public Page<QuizQuestion> findAllByThemeId(Long themeId, Pageable pageable) {
         return quizQuestionRepository.findAllByThemeId(themeId, pageable);
+    }
+
+    public Page<QuizQuestion> findPrivateQuestions(User user, Pageable pageable) {
+        return quizQuestionRepository.findPrivateQuestions(user.getId(), pageable);
     }
 }

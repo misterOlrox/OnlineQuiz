@@ -17,7 +17,7 @@
     <div class="container " style="width: 50%">
         <form action="/setup/solo" method="post" onsubmit="onSubmit()">
 
-            <div class="field ">
+            <div class="field">
                 <label class="label" for="time">Time for one question</label>
                 <div class="control has-icons-left has-icons-right">
                     <div class="select">

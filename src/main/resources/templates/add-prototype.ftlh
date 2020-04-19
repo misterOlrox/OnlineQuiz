@@ -15,7 +15,7 @@
     </section>
 
     <div class="container " style="width: 80%">
-        <form action="/setup/solo" method="post" onsubmit="onSubmit()">
+        <form action="/add-prototype" method="post" onsubmit="prototypeForm.submitListener()">
 
             <div class="field ">
                 <label class="label" for="time">Time for one question</label>
@@ -23,8 +23,6 @@
                     <div class="select">
                         <label>
                             <select name="time">
-                                <!-- For develop -->
-                                <option value="0:03">0:03</option>
                                 <option value="0:30">0:30</option>
                                 <option value="1:00">1:00</option>
                                 <option value="2:00">2:00</option>
@@ -60,8 +58,14 @@
                 <#-- JS insert here -->
             </div>
 
+            <#if selectedQuestionsError??>
+                <p class="help is-danger">
+                    ${selectedQuestionsError}
+                </p>
+            </#if>
+            <input type="hidden" id="selectedQuestions" name="selectedQuestions"/>
             <div class="container has-text-centered" style="margin-top: 5%">
-                <input class="button is-link is-rounded is-medium" type="submit" value="Start"/>
+                <input class="button is-link is-rounded is-medium" type="submit" value="Add"/>
             </div>
         </form>
     </div>

@@ -34,18 +34,33 @@ const prototypeForm = {
                         ${x.themeName}
                     </a>`
         );
+        panel.innerHTML
+            += `<a id="theme-0" name="theme-private" class="panel-block">
+                        <span class="panel-icon">
+                          <i class="fas fa-user-lock" style="color: brown"></i>
+                        </span>
+                        Your private questions
+                    </a>`;
+
         let themesElems = document.getElementsByName("theme");
         themesElems.forEach(themeElem =>
             themeElem.addEventListener("click", (event) => {
                 prototypeForm.getQuestions(themeElem.id.replace("theme-", ""))
             })
-        )
+        );
+
+        document
+            .getElementById("theme-0")
+            .addEventListener("click",
+                e => prototypeForm.getQuestions(0, 0, true)
+            );
     },
 
-    getQuestions: function (themeId, pageNumber) {
+    getQuestions: function (themeId, pageNumber, isPrivate) {
         let requestParams = {
             themeId: themeId,
-            pageNumber: pageNumber
+            pageNumber: pageNumber,
+            isPrivate: isPrivate
         };
 
         $.ajax({
@@ -68,7 +83,7 @@ const prototypeForm = {
         });
     },
 
-    showQuestions: function (response, themeId) {
+    showQuestions: function (response, themeId, isPrivate) {
         let questions = response.content;
         let panel = document.getElementById("main-panel");
         panel.innerHTML = '';
@@ -97,29 +112,29 @@ const prototypeForm = {
         if (totalPages === 0 || totalPages === 1) {
             pagination.innerHTML += `<a class="pagination-link is-current">${totalPages}</a>`;
         } else if (currentPage === 1) {
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${firstPage})">First Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${firstPage}, ${isPrivate})">First Page</a>`;
             pagination.innerHTML += `<a class="pagination-link is-current">${currentPage + 1}</a>`;
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${nextPage})">Next Page</a>`;
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${lastPage})">Last Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${nextPage}, ${isPrivate})">Next Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${lastPage}, ${isPrivate})">Last Page</a>`;
         } else if (currentPage === lastPage - 1) {
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${firstPage})">First Page</a>`;
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${prevPage})">Previous Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${firstPage}, ${isPrivate})">First Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${prevPage}, ${isPrivate})">Previous Page</a>`;
             pagination.innerHTML += `<a class="pagination-link is-current">${currentPage + 1}</a>`;
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${lastPage})">Last Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${lastPage}, ${isPrivate})">Last Page</a>`;
         } else if (currentPage === 0) {
             pagination.innerHTML += `<a class="pagination-link is-current">${currentPage + 1}</a>`;
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${nextPage})">Next Page</a>`;
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${lastPage})">Last Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${nextPage}, ${isPrivate})">Next Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${lastPage}, ${isPrivate})">Last Page</a>`;
         } else if (currentPage === lastPage) {
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${firstPage})">First Page</a>`;
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${prevPage})">Previous Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${firstPage}, ${isPrivate})">First Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${prevPage}, ${isPrivate})">Previous Page</a>`;
             pagination.innerHTML += `<a class="pagination-link is-current">${currentPage + 1}</a>`;
         } else {
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${firstPage})">First Page</a>`;
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${prevPage})">Previous Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${firstPage}, ${isPrivate})">First Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${prevPage}, ${isPrivate})">Previous Page</a>`;
             pagination.innerHTML += `<a class="pagination-link is-current">${currentPage + 1}</a>`;
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${nextPage})">Next Page</a>`;
-            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${lastPage})">Last Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${nextPage}, ${isPrivate})">Next Page</a>`;
+            pagination.innerHTML += `<a class="pagination-link" onclick="prototypeForm.getQuestions(${themeId}, ${lastPage}, ${isPrivate})">Last Page</a>`;
         }
 
         pagination.innerHTML += `</ul></nav>`;
@@ -159,10 +174,16 @@ const prototypeForm = {
         }
     },
 
-    deleteQuestion: function(questionId) {
+    deleteQuestion: function (questionId) {
         let toDelete = document.getElementById("selected-question-" + questionId);
         selectedQuestions.delete(questionId);
         document.getElementById("selected-questions").removeChild(toDelete);
+    },
+
+    submitListener: function () {
+        document.getElementById("selectedQuestions").value = Array.from(selectedQuestions);
+
+        return true;
     }
 };
 
