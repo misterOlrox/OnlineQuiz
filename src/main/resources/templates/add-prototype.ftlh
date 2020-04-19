@@ -37,10 +37,11 @@
                 </div>
             </div>
 
-            <div class="field" style="margin-top: 20px">
-                <label class="label">Add questions for quiz</label>
-                <p></p>
-                Available themes
+            <div class="field" style="margin-top: 20px;">
+                <label class="label" for="time">Selected Questions</label>
+                <div id="selected-questions">
+                    <#-- JS insert here -->
+                </div>
             </div>
 
             <nav class="panel">
@@ -48,14 +49,16 @@
                     Available themes and questions
                 </p>
                 <p class="panel-tabs">
-                    <a id="filter-public" class="is-active">Public</a>
-                    <a id="filter-private">Private</a>
                 </p>
 
                 <div id="main-panel">
                     <#-- JS insert here -->
                 </div>
             </nav>
+
+            <div id="pagination">
+                <#-- JS insert here -->
+            </div>
 
             <div class="container has-text-centered" style="margin-top: 5%">
                 <input class="button is-link is-rounded is-medium" type="submit" value="Start"/>

@@ -1,6 +1,8 @@
 package com.olrox.quiz.repository;
 
 import com.olrox.quiz.entity.QuizQuestion;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -16,4 +18,6 @@ public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long
     @Query("select q from QuizQuestion q join q.themes t where t.id=:themeId")
     List<QuizQuestion> findAllByThemeId(@Param("themeId") Long themeId);
 
+    @Query("select q from QuizQuestion q join q.themes t where t.id=:themeId")
+    Page<QuizQuestion> findAllByThemeId(@Param("themeId") Long themeId, Pageable pageable);
 }

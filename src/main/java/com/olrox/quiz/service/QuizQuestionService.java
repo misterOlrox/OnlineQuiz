@@ -8,6 +8,8 @@ import com.olrox.quiz.repository.QuizQuestionRepository;
 import com.olrox.quiz.repository.QuizQuestionThemeRepository;
 import com.olrox.quiz.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -115,5 +117,9 @@ public class QuizQuestionService {
 
     public List<QuizQuestion> findAllByThemeId(Long themeId) {
         return quizQuestionRepository.findAllByThemeId(themeId);
+    }
+
+    public Page<QuizQuestion> findAllByThemeId(Long themeId, Pageable pageable) {
+        return quizQuestionRepository.findAllByThemeId(themeId, pageable);
     }
 }

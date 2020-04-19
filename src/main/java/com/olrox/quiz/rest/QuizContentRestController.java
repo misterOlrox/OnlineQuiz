@@ -5,8 +5,12 @@ import com.olrox.quiz.dto.ThemeDto;
 import com.olrox.quiz.service.QuizQuestionService;
 import com.olrox.quiz.service.QuizQuestionThemeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +38,8 @@ public class QuizContentRestController {
                 HttpStatus.OK);
     }
 
-    @GetMapping("/questions")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/questions-all")
     public ResponseEntity<?> getQuestions(@RequestParam Long themeId) {
         return new ResponseEntity<>(
                 quizQuestionService
@@ -42,6 +47,22 @@ public class QuizContentRestController {
                         .stream()
                         .map(QuestionGeneralInfoDto::from)
                         .collect(Collectors.toList()),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/questions")
+    public ResponseEntity<Page<?>> getQuestions(
+            @RequestParam Long themeId,
+            @RequestParam(defaultValue = "0") Integer pageNumber,
+            @RequestParam(defaultValue = "20") Integer pageSize
+    ) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        return new ResponseEntity<>(
+                quizQuestionService
+                        .findAllByThemeId(themeId, pageable)
+                        .map(QuestionGeneralInfoDto::from),
                 HttpStatus.OK
         );
     }
