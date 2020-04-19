@@ -28,7 +28,7 @@ public class SoloGame {
 
     @ManyToOne
     @JoinColumn(name = "prototype_id", nullable = false)
-    private SoloGamePrototype prototype;
+    private GamePrototype prototype;
 
     @ManyToOne
     private User participant;
@@ -48,11 +48,11 @@ public class SoloGame {
         this.id = id;
     }
 
-    public SoloGamePrototype getPrototype() {
+    public GamePrototype getPrototype() {
         return prototype;
     }
 
-    public void setPrototype(SoloGamePrototype prototype) {
+    public void setPrototype(GamePrototype prototype) {
         this.prototype = prototype;
     }
 

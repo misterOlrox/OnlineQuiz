@@ -1,7 +1,7 @@
 package com.olrox.quiz.service;
 
 import com.olrox.quiz.entity.QuizQuestion;
-import com.olrox.quiz.entity.SoloGamePrototype;
+import com.olrox.quiz.entity.GamePrototype;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.repository.SoloGamePrototypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +15,15 @@ public class GamePrototypeService {
     @Autowired
     private SoloGamePrototypeRepository prototypeRepository;
 
-    public SoloGamePrototype createPrototype(
+    public GamePrototype createPrototype(
             User creator,
+            GamePrototype.Type type,
             List<QuizQuestion> questionList,
             Integer timeForQuestionInSeconds
     ) {
-        SoloGamePrototype prototype = new SoloGamePrototype();
+        GamePrototype prototype = new GamePrototype();
         prototype.setCreator(creator);
+        prototype.setType(type);
         prototype.setQuestionList(questionList);
         prototype.setNumberOfQuestions(questionList.size());
         prototype.setTimeForQuestionInSeconds(timeForQuestionInSeconds);

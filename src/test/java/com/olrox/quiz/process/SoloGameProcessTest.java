@@ -3,7 +3,7 @@ package com.olrox.quiz.process;
 import com.olrox.quiz.entity.UserAnswer;
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.SoloGame;
-import com.olrox.quiz.entity.SoloGamePrototype;
+import com.olrox.quiz.entity.GamePrototype;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.entity.WrongAnswer;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ class SoloGameProcessTest {
     @Mock
     private SoloGame soloGame;
     @Mock
-    private SoloGamePrototype soloGamePrototype;
+    private GamePrototype soloGamePrototype;
 
     @BeforeEach
     public void prepare() {

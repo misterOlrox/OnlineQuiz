@@ -1,5 +1,6 @@
 package com.olrox.quiz.controller.common.adding;
 
+import com.olrox.quiz.entity.GamePrototype;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.service.GamePrototypeService;
 import com.olrox.quiz.service.QuizQuestionService;
@@ -57,6 +58,7 @@ public class GamePrototypeController {
         } else {
             gamePrototypeService.createPrototype(
                     user,
+                    GamePrototype.Type.SOLO_SHARED,
                     quizQuestionService.findAllById(selectedQuestions),
                     TimeUtil.getTimeInSecondsFromStringWithMinuteAndSecond(time)
             );

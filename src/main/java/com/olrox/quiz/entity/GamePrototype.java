@@ -19,10 +19,10 @@ import java.util.Set;
 
 @Entity
 @Table(name = "solo_game_prototype_table")
-public class SoloGamePrototype {
+public class GamePrototype {
     public enum Type {
-        SOLO,
-        SHARED
+        SOLO_RANDOM,
+        SOLO_SHARED
     }
 
     @Id
@@ -105,6 +105,7 @@ public class SoloGamePrototype {
     public String toString() {
         return "SoloGamePrototype{" +
                 "id=" + id +
+                ", type=" + type +
                 ", soloGames=" + soloGames +
                 ", questionList=" + questionList +
                 ", timeForQuestionInSeconds=" + timeForQuestionInSeconds +

@@ -1,5 +1,6 @@
 package com.olrox.quiz.service;
 
+import com.olrox.quiz.entity.GamePrototype;
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.entity.UserAnswer;
@@ -52,7 +53,12 @@ public class SoloGameService {
                     "Haven't any questions for themes " + new JSONArray(themesIds));
         }
 
-        var prototype = prototypeService.createPrototype(user, questions, timeForQuestionInSeconds);
+        var prototype = prototypeService.createPrototype(
+                user,
+                GamePrototype.Type.SOLO_RANDOM,
+                questions,
+                timeForQuestionInSeconds
+        );
 
         SoloGame soloGame = new SoloGame();
         soloGame.setParticipant(user);
