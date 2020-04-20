@@ -1,4 +1,4 @@
-<#import "parts/common.ftlh" as c>
+<#import "../parts/common.ftlh" as c>
 
 <@c.page>
     <section class="hero is-small is-bold" style="margin-bottom: 0%">
@@ -17,6 +17,20 @@
     <div class="container " style="width: 80%">
         <form action="/add-prototype" method="post" onsubmit="prototypeForm.submitListener()">
 
+            <div class="field">
+                <label class="label" for="prototypeName">Name</label>
+                <div class="control has-icons-left has-icons-right">
+                    <input type="text" id="prototypeName" name="prototypeName" autofocus="autofocus" class="input"
+                           placeholder="Prototype Name" <#if prototypeName??>value="${prototypeName}"</#if>>
+                </div>
+
+                <#if prototypeNameError??>
+                    <p class="help is-danger">
+                        ${prototypeNameError}
+                    </p>
+                </#if>
+            </div>
+
             <div class="field ">
                 <label class="label" for="time">Time for one question</label>
                 <div class="control has-icons-left has-icons-right">
@@ -33,6 +47,16 @@
                         <i class="fas fa-clock"></i>
                     </span>
                 </div>
+            </div>
+
+            <div class="field" style="margin-top: 2%">
+                <label class="label" for="isPrivate">Is private?</label>
+                    <span class="icon is-small is-left">
+                       <i class="fas fa-low-vision"></i>
+                    </span>
+                <label class="checkbox has-text-centered" for="isPrivate" style="margin-left: 10px">
+                    <input type="checkbox" name="isPrivate" <#if isPrivate??>checked</#if> >
+                </label>
             </div>
 
             <div class="field" style="margin-top: 20px;">

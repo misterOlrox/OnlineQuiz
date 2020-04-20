@@ -22,7 +22,8 @@ import java.util.Set;
 public class GamePrototype {
     public enum Type {
         SOLO_RANDOM,
-        SOLO_SHARED
+        SOLO_SHARED_PRIVATE,
+        SOLO_SHARED_PUBLIC
     }
 
     @Id
@@ -44,6 +45,7 @@ public class GamePrototype {
 
     private Integer timeForQuestionInSeconds;
     private Integer numberOfQuestions;
+    private String name;
 
     public Long getId() {
         return id;
@@ -101,13 +103,20 @@ public class GamePrototype {
         this.numberOfQuestions = numberOfQuestions;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "SoloGamePrototype{" +
                 "id=" + id +
+                ", name=" + name +
                 ", type=" + type +
-                ", soloGames=" + soloGames +
-                ", questionList=" + questionList +
                 ", timeForQuestionInSeconds=" + timeForQuestionInSeconds +
                 ", numberOfQuestions=" + numberOfQuestions +
                 '}';

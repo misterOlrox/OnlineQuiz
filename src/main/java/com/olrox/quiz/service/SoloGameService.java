@@ -56,6 +56,7 @@ public class SoloGameService {
         var prototype = prototypeService.createPrototype(
                 user,
                 GamePrototype.Type.SOLO_RANDOM,
+                generatePrototypeName(user),
                 questions,
                 timeForQuestionInSeconds
         );
@@ -72,6 +73,10 @@ public class SoloGameService {
         activeGames.put(soloGame.getId(), newProcess);
 
         return soloGame.getId();
+    }
+
+    private String generatePrototypeName(User user) {
+        return "Random solo game by " + user.getUsername();
     }
 
     public List<SoloGame> deleteGamesInProgress() {

@@ -1,5 +1,5 @@
-<#import "parts/common.ftlh" as c>
-<#include "parts/security.ftlh">
+<#import "../parts/common.ftlh" as c>
+<#include "../parts/security.ftlh">
 
 <@c.page>
     <section class="hero is-small ${(signUpSuccessful?? || loggedOutMsg??)?string('is-success', '')}"

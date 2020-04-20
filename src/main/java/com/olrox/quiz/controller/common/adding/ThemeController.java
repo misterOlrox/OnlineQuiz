@@ -21,7 +21,7 @@ public class ThemeController {
 
     @GetMapping("/add-theme")
     public String addTheme() {
-        return "add-theme";
+        return "adding/add-theme";
     }
 
     @PostMapping("/add-theme")
@@ -49,6 +49,6 @@ public class ThemeController {
             LOGGER.warn("Theme error: {}", model.getAttribute("themeError"));
         }
 
-        return "/add-theme";
+        return "adding/add-theme";
     }
 }

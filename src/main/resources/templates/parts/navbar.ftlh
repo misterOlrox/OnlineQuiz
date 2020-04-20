@@ -27,6 +27,9 @@
                         <a class="navbar-item" href="/user/games">
                             Your games
                         </a>
+                        <a class="navbar-item" href="/user/shared">
+                            Your shared quiz
+                        </a>
 
                         <hr class="navbar-divider">
                         <a class="navbar-item" style="color: crimson" href="/logout">
@@ -42,10 +45,10 @@
                 </a>
                 <div class="navbar-dropdown is-boxed">
                     <a class="navbar-item" href="/intro/solo">
-                        Solo
+                        Play Random Solo
                     </a>
                     <a class="navbar-item" href="/add-prototype">
-                        Add quiz
+                        Add Shared Quiz
                     </a>
                 </div>
             </div>

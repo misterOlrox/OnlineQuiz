@@ -31,17 +31,23 @@ public class GamePrototypeController {
     @GetMapping("/add-prototype")
     public String getFormForAddPrototype() {
 
-        return "add-prototype";
+        return "/adding/add-prototype";
     }
 
+    // TODO return choice back in model
     @PostMapping("/add-prototype")
     public String postFormForAddPrototype(Model model,
                                           @AuthenticationPrincipal User user,
+                                          @RequestParam String prototypeName,
                                           @RequestParam String time,
+                                          @RequestParam(defaultValue = "false") boolean isPrivate,
                                           @RequestParam List<Long> selectedQuestions) {
 
-        LOG.info("User [{}] tried to add new game prototype with questions {}",
-                user.getUsername(), selectedQuestions.toString());
+        LOG.debug("User [{}] tried to add new {} game prototype with questions {}",
+                user.getUsername(),
+                isPrivate ? "private" : "public",
+                selectedQuestions.toString()
+        );
 
         boolean hasErrors = false;
         if (StringUtils.isEmpty(time)) {
@@ -52,17 +58,31 @@ public class GamePrototypeController {
             model.addAttribute("selectedQuestionsError", "Choose questions");
             hasErrors = true;
         }
+        if (StringUtils.isEmpty(prototypeName)) {
+            model.addAttribute("prototypeNameError", "Quiz name shouldn't be empty");
+            hasErrors = true;
+        }
+
+        GamePrototype.Type type;
+        if (isPrivate) {
+            type = GamePrototype.Type.SOLO_SHARED_PRIVATE;
+            model.addAttribute("isPrivate", true);
+        } else {
+            type = GamePrototype.Type.SOLO_SHARED_PUBLIC;
+        }
 
         if (hasErrors) {
-            return "add-prototype";
+            model.addAttribute("prototypeName", prototypeName);
+            return "adding/add-prototype";
         } else {
             gamePrototypeService.createPrototype(
                     user,
-                    GamePrototype.Type.SOLO_SHARED,
+                    type,
+                    prototypeName,
                     quizQuestionService.findAllById(selectedQuestions),
                     TimeUtil.getTimeInSecondsFromStringWithMinuteAndSecond(time)
             );
-            return "redirect:/user/profile";
+            return "redirect:/user/shared";
         }
     }
 }

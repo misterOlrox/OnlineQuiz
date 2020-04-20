@@ -27,4 +27,10 @@ public class UserController {
 
         return "user/games";
     }
+
+    @GetMapping("/shared")
+    public String getShared() {
+
+        return "user/shared";
+    }
 }

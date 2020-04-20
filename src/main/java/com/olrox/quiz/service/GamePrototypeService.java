@@ -18,12 +18,14 @@ public class GamePrototypeService {
     public GamePrototype createPrototype(
             User creator,
             GamePrototype.Type type,
+            String prototypeName,
             List<QuizQuestion> questionList,
             Integer timeForQuestionInSeconds
     ) {
         GamePrototype prototype = new GamePrototype();
         prototype.setCreator(creator);
         prototype.setType(type);
+        prototype.setName(prototypeName);
         prototype.setQuestionList(questionList);
         prototype.setNumberOfQuestions(questionList.size());
         prototype.setTimeForQuestionInSeconds(timeForQuestionInSeconds);

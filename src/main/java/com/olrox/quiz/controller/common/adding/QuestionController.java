@@ -35,7 +35,7 @@ public class QuestionController {
         List<QuizQuestionTheme> themes = quizQuestionThemeService.getAllThemes();
         model.addAttribute("themes", themes);
 
-        return "add-question";
+        return "adding/add-question";
     }
 
     @PostMapping("/add-question")
