@@ -35,7 +35,7 @@ public class SoloGameProcess {
 
     protected SoloGameProcess(SoloGame soloGame, Clock clock) {
         this.soloGame = soloGame;
-        this.questionList = soloGame.getPrototype().getQuestionList();
+        this.questionList = soloGame.getPrototype().getShuffledQuestionList();
         this.questionDtos = questionList.stream().map(QuestionToGameDto::new).collect(Collectors.toList());
         this.currentQuestionInd = 0;
         this.userAnswers = new ArrayList<>();
@@ -91,6 +91,10 @@ public class SoloGameProcess {
                     break;
                 }
             }
+        }
+        if (resultStatus == UserAnswer.Status.UNKNOWN) {
+            LOG.warn("For gameprocess [{}] was given UNKNOWN answer {}",
+                    getSoloGame().getId(), answer);
         }
 
         return addResult(currentQuestion, resultStatus, answer);

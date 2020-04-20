@@ -50,7 +50,13 @@ public class PlayController {
     public String playShared(@PathVariable Long prototypeId,
                              @AuthenticationPrincipal User user,
                              Model model) {
-        Long gameId = soloGameService.generateSharedSoloGame(user, prototypeId);
+        var alreadyInProgress = soloGameService.findGameAlreadyInProgress(user, prototypeId);
+        Long gameId;
+        if (alreadyInProgress.isPresent()) {
+            gameId = alreadyInProgress.get().getId();
+        } else {
+            gameId = soloGameService.generateSharedSoloGame(user, prototypeId);
+        }
 
         return playSolo(gameId, user, model);
     }

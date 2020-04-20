@@ -51,7 +51,7 @@ class SoloGameProcessTest {
         q3.getWrongAnswers().add(new WrongAnswer("w3"));
 
         when(soloGame.getPrototype()).thenReturn(soloGamePrototype);
-        when(soloGamePrototype.getQuestionList()).thenReturn(List.of(q1, q2, q3));
+        when(soloGamePrototype.getShuffledQuestionList()).thenReturn(List.of(q1, q2, q3));
         when(soloGamePrototype.getTimeForQuestionInSeconds()).thenReturn(TIMEOUT_LIMIT);
         soloGameProcess = new SoloGameProcess(soloGame);
 
@@ -127,7 +127,7 @@ class SoloGameProcessTest {
         q3.getWrongAnswers().add(new WrongAnswer("w3"));
 
         when(soloGame.getPrototype()).thenReturn(soloGamePrototype);
-        when(soloGamePrototype.getQuestionList()).thenReturn(List.of(q1, q2, q3));
+        when(soloGamePrototype.getShuffledQuestionList()).thenReturn(List.of(q1, q2, q3));
         when(soloGamePrototype.getTimeForQuestionInSeconds()).thenReturn(TIMEOUT_LIMIT);
         soloGameProcess = new SoloGameProcess(soloGame, clock);
 

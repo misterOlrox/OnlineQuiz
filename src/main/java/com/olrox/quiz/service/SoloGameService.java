@@ -128,6 +128,10 @@ public class SoloGameService {
         return createSoloGameProcess(participant, prototype);
     }
 
+    public Optional<SoloGame> findGameAlreadyInProgress(User participant, Long prototypeId) {
+        return soloGameRepository.findInProgressWithParticipant(participant.getId(), prototypeId);
+    }
+
     private Long createSoloGameProcess(User participant, GamePrototype prototype) {
         SoloGame soloGame = new SoloGame();
         soloGame.setParticipant(participant);

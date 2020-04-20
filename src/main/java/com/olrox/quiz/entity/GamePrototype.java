@@ -14,6 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -76,6 +77,13 @@ public class GamePrototype {
 
     public List<QuizQuestion> getQuestionList() {
         return questionList;
+    }
+
+    public List<QuizQuestion> getShuffledQuestionList() {
+        var listCopy = new ArrayList<>(questionList);
+
+        Collections.shuffle(listCopy);
+        return listCopy;
     }
 
     public void setQuestionList(List<QuizQuestion> questionList) {

@@ -1,6 +1,5 @@
 'use strict';
 
-let messageInput = document.querySelector('#message');
 let stompClient = null;
 let username = null;
 let soloGameId = null;
@@ -9,6 +8,7 @@ let timeForQuestion = null;
 let numberOfQuestions = null;
 let timeLeft = 0;
 let timerId = null;
+let possAnswers = [];
 
 function getQuestion() {
     soloGameId = wsContext.gameId;
@@ -113,6 +113,8 @@ function updateClock(update) {
 //
 
 function parseGetQuestionResp(nextQuestion) {
+    console.log("Parsing questions from" + nextQuestion.toString());
+
     if (nextQuestion == null || nextQuestion.result === true) {
         window.location.replace("/result/solo/" + soloGameId);
     }
@@ -135,7 +137,7 @@ function parseGetQuestionResp(nextQuestion) {
     btns.innerHTML = '';
     qtitle.innerText += " " + (nextQuestion.number + 1);
     progressBar.value = nextQuestion.number;
-    let possAnswers = nextQuestion.answers;
+    possAnswers = nextQuestion.answers;
     for (let i = 0; i < possAnswers.length; i++) {
         let answ = possAnswers[i];
         btns.innerHTML += "<button id=\"btn" + i + "\" name=\"answer\" class=\"button is-rounded is-medium is-success\""
@@ -148,12 +150,13 @@ function parseGetQuestionResp(nextQuestion) {
         document
             .getElementById("btn" + i)
             .addEventListener("click", (event) => {
-                postAnswerToSoloGame(event.target.innerText)
+                postAnswerToSoloGame(i)
             });
     }
 }
 
-function postAnswerToSoloGame(answer) {
+function postAnswerToSoloGame(answerInd) {
+    let answer = possAnswers[answerInd];
     let answerJson = {
         value: answer
     };
