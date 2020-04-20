@@ -20,28 +20,39 @@ public class PlayController {
     @Autowired
     private MyErrorController errorController;
 
-    @GetMapping("/play/solo/{id}")
-    public String playSolo(@PathVariable Long id, @AuthenticationPrincipal User user, Model model) {
-        SoloGameProcess soloGameProcess = soloGameService.getGameProcessById(id);
+    @GetMapping("/play/solo/{gameId}")
+    public String playSolo(@PathVariable Long gameId,
+                           @AuthenticationPrincipal User user,
+                           Model model) {
+        SoloGameProcess soloGameProcess = soloGameService.getGameProcessById(gameId);
         if (soloGameProcess == null) {
-            SoloGame finishedGame = soloGameService.findFinishedGame(id).orElse(null);
+            SoloGame finishedGame = soloGameService.findFinishedGame(gameId).orElse(null);
             if (finishedGame != null) {
-                return "redirect:/result/solo/" + id;
+                return "redirect:/result/solo/" + gameId;
             } else {
                 return errorController.getErrorView(model, "No such game process");
             }
         }
         if (soloGameProcess.isFinished() || soloGameProcess.getCurrentQuestion() == null) {
             soloGameService.finishGame(soloGameProcess);
-            return "redirect:/result/solo/" + id;
+            return "redirect:/result/solo/" + gameId;
         }
         if (!soloGameProcess.getSoloGame().getParticipant().equals(user)) {
             return errorController.getErrorView(model, "This game isn't yours");
         }
 
-        model.addAttribute("gameId", id);
+        model.addAttribute("gameId", gameId);
 
         return "play/solo";
+    }
+
+    @GetMapping("play/public-shared/{prototypeId}")
+    public String playShared(@PathVariable Long prototypeId,
+                             @AuthenticationPrincipal User user,
+                             Model model) {
+        Long gameId = soloGameService.generateSharedSoloGame(user, prototypeId);
+
+        return playSolo(gameId, user, model);
     }
 
 }

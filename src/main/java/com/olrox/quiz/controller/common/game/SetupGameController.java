@@ -70,7 +70,7 @@ public class SetupGameController {
             return "setup/solo";
         } else {
 
-            var soloGame = soloGameService.generateSoloGame(
+            var soloGame = soloGameService.generateRandomSoloGame(
                     user,
                     TimeUtil.getTimeInSecondsFromStringWithMinuteAndSecond(time),
                     quantityOfQuestions,

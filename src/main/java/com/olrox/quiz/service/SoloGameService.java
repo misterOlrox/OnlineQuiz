@@ -5,6 +5,7 @@ import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.entity.UserAnswer;
 import com.olrox.quiz.process.SoloGameProcess;
+import com.olrox.quiz.repository.GamePrototypeRepository;
 import com.olrox.quiz.repository.SoloGameRepository;
 import com.olrox.quiz.repository.UserAnswerRepository;
 import org.json.JSONArray;
@@ -30,13 +31,15 @@ public class SoloGameService {
     @Autowired
     private UserAnswerRepository userAnswerRepository;
     @Autowired
+    private GamePrototypeRepository gamePrototypeRepository;
+    @Autowired
     private GamePrototypeService prototypeService;
     @Autowired
     private QuizQuestionService quizQuestionService;
 
     private Map<Long, SoloGameProcess> activeGames = new ConcurrentHashMap<>();
 
-    public Long generateSoloGame(
+    public Long generateRandomSoloGame(
             User user,
             Integer timeForQuestionInSeconds,
             Integer numberOfQuestions,
@@ -61,18 +64,7 @@ public class SoloGameService {
                 timeForQuestionInSeconds
         );
 
-        SoloGame soloGame = new SoloGame();
-        soloGame.setParticipant(user);
-        soloGame.setStatus(SoloGame.Status.IN_PROGRESS);
-        soloGame.setCreationTime(LocalDateTime.now());
-        soloGame.setPrototype(prototype);
-
-        soloGameRepository.save(soloGame);
-
-        SoloGameProcess newProcess = new SoloGameProcess(soloGame);
-        activeGames.put(soloGame.getId(), newProcess);
-
-        return soloGame.getId();
+        return createSoloGameProcess(user, prototype);
     }
 
     private String generatePrototypeName(User user) {
@@ -128,5 +120,26 @@ public class SoloGameService {
     @Transactional
     public List<SoloGame> findGamesByParticipant(User participant) {
         return soloGameRepository.findAllByParticipant(participant);
+    }
+
+    public Long generateSharedSoloGame(User participant, Long prototypeId) {
+        var prototype = gamePrototypeRepository.findById(prototypeId).orElseThrow();
+
+        return createSoloGameProcess(participant, prototype);
+    }
+
+    private Long createSoloGameProcess(User participant, GamePrototype prototype) {
+        SoloGame soloGame = new SoloGame();
+        soloGame.setParticipant(participant);
+        soloGame.setStatus(SoloGame.Status.IN_PROGRESS);
+        soloGame.setCreationTime(LocalDateTime.now());
+        soloGame.setPrototype(prototype);
+
+        soloGameRepository.save(soloGame);
+
+        SoloGameProcess newProcess = new SoloGameProcess(soloGame);
+        activeGames.put(soloGame.getId(), newProcess);
+
+        return soloGame.getId();
     }
 }

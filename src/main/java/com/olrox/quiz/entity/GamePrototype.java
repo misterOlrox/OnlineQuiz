@@ -1,6 +1,7 @@
 package com.olrox.quiz.entity;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -43,9 +44,11 @@ public class GamePrototype {
     @Enumerated(EnumType.STRING)
     private Type type;
 
+    @Column(nullable = false)
+    private String name;
+
     private Integer timeForQuestionInSeconds;
     private Integer numberOfQuestions;
-    private String name;
 
     public Long getId() {
         return id;

@@ -1,6 +1,7 @@
 package com.olrox.quiz.controller.common;
 
 import com.olrox.quiz.entity.User;
+import com.olrox.quiz.service.GamePrototypeService;
 import com.olrox.quiz.service.SoloGameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +16,8 @@ public class UserController {
 
     @Autowired
     private SoloGameService soloGameService;
+    @Autowired
+    private GamePrototypeService gamePrototypeService;
 
     @GetMapping("/profile")
     public String getProfile() {
@@ -29,7 +32,9 @@ public class UserController {
     }
 
     @GetMapping("/shared")
-    public String getShared() {
+    public String getShared(Model model, @AuthenticationPrincipal User user) {
+        var prototypes = gamePrototypeService.findSharedPrototypesByCreator(user);
+        model.addAttribute("prototypes", prototypes);
 
         return "user/shared";
     }

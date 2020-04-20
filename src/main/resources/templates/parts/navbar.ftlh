@@ -45,10 +45,14 @@
                 </a>
                 <div class="navbar-dropdown is-boxed">
                     <a class="navbar-item" href="/intro/solo">
-                        Play Random Solo
+                        Play random solo quiz
                     </a>
+                    <a class="navbar-item" href="/intro/shared-public">
+                        Play public shared quiz
+                    </a>
+                    <hr class="navbar-divider">
                     <a class="navbar-item" href="/add-prototype">
-                        Add Shared Quiz
+                        Add shared quiz
                     </a>
                 </div>
             </div>

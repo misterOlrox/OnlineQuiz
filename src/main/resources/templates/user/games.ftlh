@@ -26,6 +26,7 @@
             <thead>
             <tr>
                 <th class="has-text-centered">Game id</th>
+                <th class="has-text-centered">Quiz name</th>
                 <th class="has-text-centered">Start date</th>
                 <th class="has-text-centered">Finish date</th>
                 <th class="has-text-centered">Correct answers</th>
@@ -38,6 +39,7 @@
             <#list games as game>
                 <tr>
                     <td class="has-text-centered">${game.id}</td>
+                    <td class="has-text-centered">${game.prototype.name}</td>
                     <td class="has-text-centered">${game.getCreationTimeString()}</td>
                     <td class="has-text-centered">${game.getFinishTimeString()}</td>
                     <td class="has-text-centered">${game.correctAnswersCount} / ${game.prototype.numberOfQuestions}</td>
