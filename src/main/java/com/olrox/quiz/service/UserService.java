@@ -50,6 +50,10 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
     public User signUp(String username, String password) {
         User userFromDb = userRepository.findByUsername(username);
 

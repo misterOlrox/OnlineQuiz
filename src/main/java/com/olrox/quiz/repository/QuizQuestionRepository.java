@@ -1,6 +1,7 @@
 package com.olrox.quiz.repository;
 
 import com.olrox.quiz.entity.QuizQuestion;
+import com.olrox.quiz.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 
 public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long> {
+
+    Long countAllByAuthorEquals(User author);
 
     @Query("select q.id from QuizQuestion q join q.themes t where t.id in :themesIds")
     Set<Long> getQuestionIdsByThemes(@Param("themesIds") List<Long> themesIds);

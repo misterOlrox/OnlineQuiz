@@ -13,6 +13,8 @@ public interface GamePrototypeRepository extends JpaRepository<GamePrototype, Lo
 
     List<GamePrototype> findAllByCreatorEqualsOrderById(User creator);
 
+    Long countAllByCreatorEqualsAndTypeIn(User creator, Set<GamePrototype.Type> types);
+
     @Query("select gp" +
             " from GamePrototype gp " +
             " where " +

@@ -13,6 +13,8 @@ public interface SoloGameRepository extends JpaRepository<SoloGame, Long> {
 
     List<SoloGame> findAllByParticipant(User participant);
 
+    Long countAllByParticipantEqualsAndStatusEquals(User participant, SoloGame.Status status);
+
     List<SoloGame> findAllByStatusEquals(SoloGame.Status status);
 
     List<SoloGame> deleteAllByStatusEquals(SoloGame.Status status);
