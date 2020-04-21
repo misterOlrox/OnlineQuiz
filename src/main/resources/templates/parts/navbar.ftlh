@@ -74,6 +74,26 @@
                 </div>
             </div>
             </#if>
+
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">
+                    Ratings
+                </a>
+                <div class="navbar-dropdown is-boxed">
+                    <a class="navbar-item" href="/rating/quiz-played">
+                        Quiz played Top
+                    </a>
+                    <a class="navbar-item" href="/rating/quiz-created">
+                        Quiz created Top
+                    </a>
+                    <a class="navbar-item" href="/rating/questions-added">
+                        Questions added Top
+                    </a>
+                    <a class="navbar-item" href="/rating/correct-answers">
+                        Correct answers count Top
+                    </a>
+                </div>
+            </div>
         </div>
 
         <div class="navbar-end">

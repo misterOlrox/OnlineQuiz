@@ -2,6 +2,7 @@ package com.olrox.quiz.repository;
 
 import com.olrox.quiz.entity.QuizQuestion;
 import com.olrox.quiz.entity.User;
+import com.olrox.quiz.projection.UserStatProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,4 +27,10 @@ public interface QuizQuestionRepository extends JpaRepository<QuizQuestion, Long
 
     @Query("select q from QuizQuestion q where q.author.id=:userId")
     Page<QuizQuestion> findPrivateQuestions(@Param("userId") Long userId, Pageable pageable);
+
+    @Query("select u as user, count(u) as value, 'QUESTIONS_ADDED' as type" +
+            " from User u join QuizQuestion qq on u=qq.author" +
+            " group by u" +
+            " order by count(u) DESC")
+    Page<UserStatProjection> findTopByQuestionsAdded(Pageable pageable);
 }

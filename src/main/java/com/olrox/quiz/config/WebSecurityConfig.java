@@ -49,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/static/**", "/webjars/**", "/images/**", "/js/**").permitAll()
-                .antMatchers("/", "/intro/*", "/api/content/**").permitAll()
+                .antMatchers("/", "/intro/*", "/rating/**", "/api/content/**").permitAll()
                 .antMatchers("/play/**").hasAuthority(Role.USER.name())
                 .antMatchers("/setup/**").hasAuthority(Role.USER.name())
                 .antMatchers("/api/game/solo/**").hasAuthority(Role.USER.name())
