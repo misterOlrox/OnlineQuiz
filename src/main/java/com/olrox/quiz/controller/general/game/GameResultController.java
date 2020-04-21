@@ -1,6 +1,6 @@
-package com.olrox.quiz.controller.common.game;
+package com.olrox.quiz.controller.general.game;
 
-import com.olrox.quiz.controller.common.MyErrorController;
+import com.olrox.quiz.controller.general.MyErrorController;
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.service.SoloGameService;
 import com.olrox.quiz.service.UserAnswerService;

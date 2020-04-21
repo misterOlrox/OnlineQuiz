@@ -1,4 +1,4 @@
-package com.olrox.quiz.controller.common.game;
+package com.olrox.quiz.controller.general.game;
 
 import com.olrox.quiz.service.GamePrototypeService;
 import org.springframework.beans.factory.annotation.Autowired;

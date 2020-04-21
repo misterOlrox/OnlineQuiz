@@ -1,4 +1,4 @@
-package com.olrox.quiz.controller.common;
+package com.olrox.quiz.controller.general;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

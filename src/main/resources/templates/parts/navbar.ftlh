@@ -27,6 +27,9 @@
                         <a class="navbar-item" href="/user/games">
                             Your games
                         </a>
+                        <a class="navbar-item" href="/user/invitations">
+                            Your invitations
+                        </a>
                         <a class="navbar-item" href="/user/shared">
                             Your shared quiz
                         </a>
@@ -58,21 +61,21 @@
             </div>
 
             <#if user??>
-            <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link" href="/add-question">
-                    Questions
-                </a>
-                <div class="navbar-dropdown is-boxed">
-                    <a class="navbar-item" href="/add-question">
-                        Add question
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="/add-question">
+                        Questions
                     </a>
-                    <#if isAdmin || isModerator>
-                    <a class="navbar-item" href="/add-theme">
-                        Add theme
-                    </a>
-                    </#if>
+                    <div class="navbar-dropdown is-boxed">
+                        <a class="navbar-item" href="/add-question">
+                            Add question
+                        </a>
+                        <#if isAdmin || isModerator>
+                            <a class="navbar-item" href="/add-theme">
+                                Add theme
+                            </a>
+                        </#if>
+                    </div>
                 </div>
-            </div>
             </#if>
 
             <div class="navbar-item has-dropdown is-hoverable">
@@ -134,7 +137,7 @@
         if ($navbarBurgers.length > 0) {
 
             // Add a click event on each of them
-            $navbarBurgers.forEach( el => {
+            $navbarBurgers.forEach(el => {
                 el.addEventListener('click', () => {
 
                     // Get the target from the "data-target" attribute

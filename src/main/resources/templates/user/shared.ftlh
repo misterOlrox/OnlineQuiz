@@ -30,6 +30,7 @@
                 <th class="has-text-centered">Number of questions</th>
                 <th class="has-text-centered">Time for question</th>
                 <th class="has-text-centered">Is private?</th>
+                <th class="has-text-centered">Invite others</th>
             </tr>
             </thead>
             <tbody>
@@ -51,6 +52,11 @@
                                 Unknown
                             </#if>
                         </td>
+                        <td>
+                            <a onclick="inviteJS.showAvailableUsers()" class="button is-link">
+                                Invite
+                            </a>
+                        </td>
                     </tr>
                 <#else>
                     You haven't any prototypes
@@ -63,4 +69,7 @@
     <div class="container has-text-centered" style="margin-top: 5%">
         <a href="/add-prototype" class="button is-primary is-rounded is-medium">Add new</a>
     </div>
+
+
+    <script src="/static/js/invitations.js"></script>
 </@c.page>

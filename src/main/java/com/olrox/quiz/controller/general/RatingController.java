@@ -1,4 +1,4 @@
-package com.olrox.quiz.controller.common;
+package com.olrox.quiz.controller.general;
 
 import com.olrox.quiz.projection.UserStatType;
 import com.olrox.quiz.service.UserStatsService;
