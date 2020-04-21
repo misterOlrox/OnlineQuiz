@@ -42,6 +42,7 @@ public class PlayController {
         }
 
         model.addAttribute("gameId", gameId);
+        model.addAttribute("numberOfQuestions", soloGameProcess.getQuestionsCount());
 
         return "play/solo";
     }

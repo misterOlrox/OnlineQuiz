@@ -149,6 +149,10 @@ public class SoloGameProcess {
         return userAnswers;
     }
 
+    public int getQuestionsCount() {
+        return questionList.size();
+    }
+
     public long getTimeForQuestionInMillis() {
         return timeForQuestionInMillis;
     }

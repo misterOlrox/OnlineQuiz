@@ -1,17 +1,15 @@
 'use strict';
 
-let stompClient = null;
-let username = null;
 let soloGameId = null;
-let connectedToWs = false;
-let timeForQuestion = null;
-let numberOfQuestions = null;
 let timeLeft = 0;
 let timerId = null;
 let possAnswers = [];
 
+let progressBar = document.getElementById("progress-bar");
+progressBar.max = appContext.numberOfQuestions;
+
 function getQuestion() {
-    soloGameId = wsContext.gameId;
+    soloGameId = appContext.gameId;
 
     $.ajax({
         type: "GET",
@@ -32,52 +30,6 @@ function getQuestion() {
     });
 }
 
-function connect() {
-    username = wsContext.username;
-    if (username !== '') {
-        console.log("Username is " + username);
-        let socket = new SockJS('/ws');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, onConnected, onError);
-    } else {
-        console.log("Don't open websocket connection: user is not authenticated");
-    }
-}
-
-function onConnected() {
-    console.log("On connected event started");
-    soloGameId = wsContext.gameId;
-    if (soloGameId !== -1) {
-        connectedToWs = true;
-        stompClient.subscribe('/topic/solo/game/info/' + soloGameId, onSoloGameInfoReceived);
-    }
-}
-
-function onError(error) {
-    console.log("Could't connect through websocket: " + error);
-}
-
-function onSoloGameInfoReceived(data) {
-    let info = JSON.parse(data.body);
-    if (info.type === "timeout.info") {
-        if (info.timeout === true) {
-            postAnswerToSoloGame(null);
-        }
-        timeLeft = 0;
-    }
-    if (info.type === 'game.process.info') {
-        timeForQuestion = info.timeForQuestionInMillis;
-        numberOfQuestions = info.numberOfQuestions;
-        console.log("Get game.process.info: timeForQuestion:"
-            + timeForQuestion +
-            " numberOfQuestions "
-            + numberOfQuestions
-        );
-        let progressBar = document.getElementById("progress-bar");
-        progressBar.max = numberOfQuestions;
-    }
-}
-
 function updateClock(update) {
     let timeLeftElem = document.getElementById("timeLeftInfo");
     let mins = parseInt(timeLeft / 60000);
@@ -95,23 +47,6 @@ function updateClock(update) {
     }
 }
 
-//
-// function sendMessage(event) {
-//     console.log("Send message started");
-//     let messageContent = messageInput.value.trim();
-//     if (messageContent && stompClient) {
-//         let chatMessage = {
-//             sender: username,
-//             content: messageInput.value,
-//             type: 'CHAT'
-//         };
-//         stompClient.send("/chat.sendMessage", {}, JSON.stringify(chatMessage));
-//         messageInput.value = '';
-//     }
-//     event.preventDefault();
-// }
-//
-
 function parseGetQuestionResp(nextQuestion) {
     console.log("Parsing questions from" + nextQuestion.toString());
 
@@ -122,7 +57,6 @@ function parseGetQuestionResp(nextQuestion) {
     let question = document.getElementById("question");
     let qtitle = document.getElementById("qtitle");
     let btns = document.getElementById("answers");
-    let progressBar = document.getElementById("progress-bar");
 
     question.innerText = nextQuestion.question;
     timeLeft = nextQuestion.timeLeft + 100;

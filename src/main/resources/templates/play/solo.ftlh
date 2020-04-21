@@ -44,10 +44,10 @@
         </div>
     </section>
 
+    <script src="/js/app.js"></script>
     <script>
         window.onload = function () {
             getQuestion();
-            connect();
         }
     </script>
 </@c.page>
