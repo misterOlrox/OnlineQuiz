@@ -1,44 +1,32 @@
 package com.olrox.quiz.websocket;
 
 import com.olrox.quiz.dto.ChatMessage;
-import com.olrox.quiz.dto.GameProcessInfo;
 import com.olrox.quiz.entity.User;
-import com.olrox.quiz.process.SoloGameProcess;
-import com.olrox.quiz.service.SoloGameService;
+import com.olrox.quiz.service.OnlineUserRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageExceptionHandler;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class InfoController {
+public class WebSocketController {
 
-    public static final Logger LOG = LoggerFactory.getLogger(InfoController.class);
+    public static final Logger LOG = LoggerFactory.getLogger(WebSocketController.class);
 
     @Autowired
-    private SimpMessagingTemplate messagingTemplate;
-    @Autowired
-    private SoloGameService soloGameService;
+    private OnlineUserRegistry onlineUserRegistry;
 
-    @SubscribeMapping("/topic/solo/game/info/{id}")
-    public GameProcessInfo gameInfo(@DestinationVariable Long id, @AuthenticationPrincipal User user) {
-        SoloGameProcess gameProcess = soloGameService.getGameProcessById(id);
-        if (!gameProcess.getSoloGame().getParticipant().getUsername().equals(user.getUsername())) {
-            throw new RuntimeException("Access denied for game with id " + id);
-        }
-
-        LOG.info("Sending game {} info to user {}", id, user.getUsername());
-        return GameProcessInfo.from(gameProcess);
+    @SubscribeMapping("/topic/online")
+    public void subscribeToOnlineTopic(@AuthenticationPrincipal User user) {
+        onlineUserRegistry.addConnected(user);
     }
 
     @MessageMapping("/chat.sendMessage")
@@ -56,7 +44,7 @@ public class InfoController {
     }
 
     @MessageExceptionHandler
-    @SendToUser(destinations="/topic/errors", broadcast=false)
+    @SendToUser(destinations = "/topic/errors", broadcast = false)
     public ChatMessage handleException(Exception exception) {
         LOG.error("Exception occurred.", exception);
 

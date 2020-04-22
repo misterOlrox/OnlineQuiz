@@ -6,6 +6,8 @@ let connectedToWs = false;
 
 const ws = {
 
+    onlineUsers: [],
+
     connect: function () {
         username = appContext.username;
         if (username !== '') {
@@ -20,32 +22,24 @@ const ws = {
 
     onConnected: function () {
         console.log("On connected event started");
-        soloGameId = appContext.gameId;
-        if (soloGameId !== -1) {
-            connectedToWs = true;
-            stompClient.subscribe('/topic/solo/game/info/' + soloGameId, ws.onSoloGameInfoReceived);
-        }
+        connectedToWs = true;
+        stompClient.subscribe('/topic/online', ws.onTopicOnlineReceiving);
     },
 
     onError: function (error) {
         console.log("Could't connect through websocket: " + error);
     },
 
-    onSoloGameInfoReceived: function (data) {
+    onTopicOnlineReceiving: function (data) {
         let info = JSON.parse(data.body);
-        if (info.type === "timeout.info") {
-            if (info.timeout === true) {
-                postAnswerToSoloGame(null);
+        if (info.type === "online.topic.info.all") {
+            for (let i = 0; i < info.onlineUsers.length; i++) {
+                let onlineUser = info.onlineUsers[i];
+                console.log("online.topic.info.all: " + onlineUser.username);
             }
-            timeLeft = 0;
-        }
-        if (info.type === 'game.process.info') {
-            console.log("Get game.process.info: timeForQuestion:"
-                + timeForQuestion +
-                " numberOfQuestions "
-                + numberOfQuestions
-            );
-
+            ws.onlineUsers = info.onlineUsers;
+        } else if (info.type === "online.topic.info.new") {
+            console.log("online.topic.info.new, id= " + info.newUser.id + ", name=" + info.newUser.username);
         }
     },
 
