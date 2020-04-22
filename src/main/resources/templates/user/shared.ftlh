@@ -16,6 +16,21 @@
     </section>
 
 
+    <div id="prototype-modal" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">Available online users</p>
+                <a class="delete" aria-label="close" onclick="inviteJS.closeAvailableUsers()"></a>
+            </header>
+            <section id="modal-body" class="modal-card-body">
+
+                <!-- Insert JS here -->
+
+            </section>
+        </div>
+    </div>
+
     <div class="box"
          style="background: linear-gradient(to top, #ffe267, #02faa8);
                 margin-left: 10%;margin-right: 10%;
@@ -52,8 +67,8 @@
                                 Unknown
                             </#if>
                         </td>
-                        <td>
-                            <a onclick="inviteJS.showAvailableUsers()" class="button is-link">
+                        <td class="has-text-centered">
+                            <a onclick="inviteJS.showAvailableUsers(${prototype.id})" class="button is-link">
                                 Invite
                             </a>
                         </td>

@@ -1,46 +1,54 @@
-let selectedToInvite = new Map();
+let modal = document.getElementById('prototype-modal');
+let modalBody = document.getElementById('modal-body');
+
 const inviteJS = {
 
-    showAvailableUsers: function () {
+    selectedPrototypeId: null,
 
+    showAvailableUsers: function (prototypeId) {
+        console.log("Selected prototypeId = " + prototypeId);
+        inviteJS.selectedPrototypeId = prototypeId;
+        modal.classList.add("is-active");
 
-        $.ajax({
-            type: "GET",
-            contentType: "application/json",
-            url: "/api/content/available/themes",
-            dataType: 'json',
-            timeout: 100000,
-            success: function (themes) {
-                console.log("SUCCESS: ", themes);
-                prototypeForm.showAvailableThemes(themes);
-            },
-            error: function (e) {
-                console.log("ERROR: ", e);
-            },
-            done: function (d) {
-                console.log("DONE");
-            }
-        });
+        inviteJS.updateAvailableUsers(ws.onlineUsers);
+        ws.listenersOnlineInfoAll.push(inviteJS.updateAvailableUsers);
     },
 
-    postInvite: function () {
-        let invite = {
-            invitedUsersIds: selectedToInvite.values()
-        };
+    closeAvailableUsers: function () {
+        inviteJS.selectedPrototypeId = null;
+        modal.classList.remove("is-active");
+    },
 
+    updateAvailableUsers: function (onlineUsers) {
+        modalBody.innerHTML = '';
+        onlineUsers.forEach(user => {
+            if (user.username === appContext.username) {
+                return;
+            }
+
+            let prototypeId = inviteJS.selectedPrototypeId;
+
+            modalBody.innerHTML += `
+            <div id="invite-${prototypeId}-${user.id}" class="content is-medium">
+                    <strong>${user.username}</strong>
+                    <a id="button-${prototypeId}-${user.id}" class="button is-link media-right" onclick="inviteJS.postInvite(${prototypeId}, ${user.id})">Send</a>
+                </div>
+            `
+        })
+    },
+
+    postInvite: function (prototypeId, invitedId) {
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "/api/invite",
-            data: JSON.stringify(invite),
-            dataType: 'json',
+            url: "/api/invite?prototypeId=" + prototypeId + "&invitedId=" + invitedId,
             timeout: 100000,
             success: function (response) {
                 console.log("Success invite");
-                inviteJS.showSuccessInvite(response);
+                inviteJS.showSuccessInvite(prototypeId, invitedId);
             },
             error: function (e) {
-                console.log("Error " + e);
+                console.log("Error " + e.errorMessage);
             },
             done: function (d) {
                 console.log("DONE");
@@ -48,7 +56,8 @@ const inviteJS = {
         });
     },
 
-    showSuccessInvite: function(response) {
-
+    showSuccessInvite: function (prototypeId, invitedId) {
+        document.getElementById("button-" + prototypeId + "-" + invitedId)
+            .setAttribute("disabled", "disabled");
     }
 };

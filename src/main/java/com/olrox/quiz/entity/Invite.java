@@ -28,6 +28,9 @@ public class Invite {
     @OneToOne
     private User invited;
 
+    @OneToOne
+    private GamePrototype gamePrototype;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 
@@ -49,6 +52,14 @@ public class Invite {
 
     public User getInvited() {
         return invited;
+    }
+
+    public GamePrototype getGamePrototype() {
+        return gamePrototype;
+    }
+
+    public void setGamePrototype(GamePrototype gamePrototype) {
+        this.gamePrototype = gamePrototype;
     }
 
     public void setInvited(User invited) {

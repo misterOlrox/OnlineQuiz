@@ -7,6 +7,7 @@ let connectedToWs = false;
 const ws = {
 
     onlineUsers: [],
+    listenersOnlineInfoAll: [],
 
     connect: function () {
         username = appContext.username;
@@ -14,6 +15,7 @@ const ws = {
             console.log("Username is " + username);
             let socket = new SockJS('/ws');
             stompClient = Stomp.over(socket);
+            ws.listenersOnlineInfoAll.push(this.logOnlineInfo);
             stompClient.connect({}, ws.onConnected, ws.onError);
         } else {
             console.log("Don't open websocket connection: user is not authenticated");
@@ -33,13 +35,17 @@ const ws = {
     onTopicOnlineReceiving: function (data) {
         let info = JSON.parse(data.body);
         if (info.type === "online.topic.info.all") {
-            for (let i = 0; i < info.onlineUsers.length; i++) {
-                let onlineUser = info.onlineUsers[i];
-                console.log("online.topic.info.all: " + onlineUser.username);
-            }
             ws.onlineUsers = info.onlineUsers;
+            ws.listenersOnlineInfoAll.forEach(listener => listener(info.onlineUsers));
         } else if (info.type === "online.topic.info.new") {
             console.log("online.topic.info.new, id= " + info.newUser.id + ", name=" + info.newUser.username);
+        }
+    },
+
+    logOnlineInfo: function(onlineUsers) {
+        for (let i = 0; i < onlineUsers.length; i++) {
+            let onlineUser = onlineUsers[i];
+            console.log("online.topic.info.all: " + onlineUser.username);
         }
     },
 
