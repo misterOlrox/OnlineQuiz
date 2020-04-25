@@ -25,8 +25,8 @@ public class TopicOnlineInfoSender {
         sendCurrentSet();
     }
 
-    public void sendCurrentSet() {
-        OnlineUsersTopicInfo message = new OnlineUsersTopicInfo(onlineUsersSet);
+    private void sendCurrentSet() {
+        OnlineUsersTopicInfo message = new OnlineUsersTopicInfo(Set.copyOf(onlineUsersSet));
         simpMessagingTemplate.convertAndSend("/topic/online", message);
     }
 

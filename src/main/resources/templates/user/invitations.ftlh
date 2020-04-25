@@ -1,6 +1,10 @@
 <#import "../parts/common.ftlh" as c>
 <#include "../parts/security.ftlh">
 
+<#assign pageSpecificScripts = ["/static/js/invitationsPage.js"]
+    in c
+>
+
 <@c.page>
     <section class="hero is-small">
         <div class="hero-body">
@@ -32,25 +36,9 @@
                 <th class="has-text-centered">Action</th>
             </tr>
             </thead>
-            <tbody>
 
-            <#list invites as invite>
-                <tr>
-                    <td class="has-text-centered">
-                        <a href="/user/profile/${invite.sender.id}">
-                            ${invite.sender.username}
-                        </a>
-                    </td>
-                    <td class="has-text-centered">${invite.gamePrototype.name}</td>
-                    <td class="has-text-centered">${invite.gamePrototype.numberOfQuestions}</td>
-                    <td class="has-text-centered">${invite.gamePrototype.timeForQuestionInSeconds} seconds</td>
-                    <td class="has-text-centered">
-                        <a class="button is-success">Accept</a>
-                        <a class="button is-danger">Decline</a>
-                    </td>
-                </tr>
-            <#else>
-            </#list>
+            <tbody id="invite-table-body">
+                <!-- insert JS -->
             </tbody>
         </table>
     </div>

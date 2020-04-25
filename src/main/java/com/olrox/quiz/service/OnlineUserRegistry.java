@@ -24,7 +24,7 @@ public class OnlineUserRegistry {
 
     private static final Logger LOG = LoggerFactory.getLogger(OnlineUserRegistry.class);
 
-    public static final long ONLINE_TIMEOUT = 20000;
+    public static final long ONLINE_TIMEOUT = 60000;
 
     private Map<String, User> currentConnectedUsers = new ConcurrentHashMap<>();
     private Map<User, Long> keptOnlineUsers = new ConcurrentHashMap<>();

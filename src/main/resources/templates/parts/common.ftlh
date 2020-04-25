@@ -14,15 +14,26 @@
         <script src="/webjars/jquery/3.1.1-1/jquery.js"></script>
         <script src="/webjars/sockjs-client/1.0.2/sockjs.min.js"></script>
         <script src="/webjars/stomp-websocket/2.3.3/stomp.js"></script>
-        <script src="/static/js/ws.js"></script>
     </head>
     <body>
+
     <#include "navbar.ftlh">
+
     <div class="bd-content" style="margin-bottom: 4%; margin-top: 3%">
         <div class="content">
             <#nested>
         </div>
     </div>
+
+    <#include "notification-box.ftlh">
+
+    <script src="/static/js/ws.js"></script>
+    <script src="/static/js/notifications.js"></script>
+    <#if pageSpecificScripts??>
+        <#list pageSpecificScripts as script>
+            <script src=${script}></script>
+        </#list>
+    </#if>
     </body>
     </html>
 </#macro>

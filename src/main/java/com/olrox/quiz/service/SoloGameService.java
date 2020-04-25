@@ -72,6 +72,7 @@ public class SoloGameService {
     }
 
     public List<SoloGame> deleteGamesInProgress() {
+        LOG.info("Deleting all games which were in progress");
         return soloGameRepository.deleteAllByStatusEquals(SoloGame.Status.IN_PROGRESS);
     }
 

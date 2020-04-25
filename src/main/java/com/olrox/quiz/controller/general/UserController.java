@@ -82,10 +82,7 @@ public class UserController {
     }
 
     @GetMapping("/invitations")
-    public String getInvitations(Model model, @AuthenticationPrincipal User user) {
-        var invites = inviteService.getCurrentInvites(user);
-        model.addAttribute("invites", invites);
-
+    public String getInvitations() {
         return "user/invitations";
     }
 }

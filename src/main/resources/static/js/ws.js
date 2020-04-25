@@ -6,8 +6,10 @@ let connectedToWs = false;
 
 const ws = {
 
+    onConnectedListeners: [],
     onlineUsers: [],
     listenersOnlineInfoAll: [],
+    listenersInvites: [],
 
     connect: function () {
         username = appContext.username;
@@ -25,14 +27,16 @@ const ws = {
     onConnected: function () {
         console.log("On connected event started");
         connectedToWs = true;
-        stompClient.subscribe('/topic/online', ws.onTopicOnlineReceiving);
+        stompClient.subscribe('/topic/online', ws.onTopicOnlineReceived);
+        stompClient.subscribe('/user/queue/invites', ws.onInviteReceived);
+        ws.onConnectedListeners.forEach(listener => listener())
     },
 
     onError: function (error) {
         console.log("Could't connect through websocket: " + error);
     },
 
-    onTopicOnlineReceiving: function (data) {
+    onTopicOnlineReceived: function (data) {
         let info = JSON.parse(data.body);
         if (info.type === "online.topic.info.all") {
             ws.onlineUsers = info.onlineUsers;
@@ -49,23 +53,10 @@ const ws = {
         }
     },
 
-//
-// function sendMessage(event) {
-//     console.log("Send message started");
-//     let messageContent = messageInput.value.trim();
-//     if (messageContent && stompClient) {
-//         let chatMessage = {
-//             sender: username,
-//             content: messageInput.value,
-//             type: 'CHAT'
-//         };
-//         stompClient.send("/chat.sendMessage", {}, JSON.stringify(chatMessage));
-//         messageInput.value = '';
-//     }
-//     event.preventDefault();
-// }
-//
-
+    onInviteReceived: function (data) {
+        let invitation = JSON.parse(data.body);
+        ws.listenersInvites.forEach(listener => listener(invitation));
+    },
 };
 
 ws.connect();

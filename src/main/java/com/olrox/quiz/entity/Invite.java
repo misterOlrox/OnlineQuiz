@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "invite_table")
@@ -33,6 +34,8 @@ public class Invite {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    private LocalDateTime creationDate;
 
     public Long getId() {
         return id;
@@ -72,5 +75,25 @@ public class Invite {
 
     public void setStatus(Status status) {
         this.status = status;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    @Override
+    public String toString() {
+        return "Invite{" +
+                "id=" + id +
+                ", sender=" + sender +
+                ", invited=" + invited +
+                ", gamePrototype=" + gamePrototype +
+                ", status=" + status +
+                ", creationDate=" + creationDate +
+                '}';
     }
 }
