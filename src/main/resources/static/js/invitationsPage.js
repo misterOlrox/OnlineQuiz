@@ -34,7 +34,12 @@ let invitationsPage = {
                         <td class="has-text-centered">${invite.gamePrototype.numberOfQuestions}</td>
                         <td class="has-text-centered">${invite.gamePrototype.timeForQuestionsInSeconds} seconds</td>
                         <td class="has-text-centered">
-                            <a class="button is-success" style="margin: 5px">Accept</a>
+                            <a 
+                                class="button is-success" 
+                                style="margin: 5px" 
+                                onclick="invitationsPage.accept(${invite.id})">
+                                    Accept
+                            </a>
                             <a 
                                 class="button is-danger"
                                 style="margin: 5px" 
@@ -45,6 +50,10 @@ let invitationsPage = {
                 `;
 
         tableBody.append(row);
+    },
+
+    accept: function(inviteId) {
+        window.location.replace('/play/invite/' + inviteId);
     },
 
     decline: function (inviteId) {

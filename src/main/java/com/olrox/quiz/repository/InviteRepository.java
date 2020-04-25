@@ -22,4 +22,8 @@ public interface InviteRepository extends JpaRepository<Invite, Long> {
 
     @Query("update Invite i set i.status=:status where i.id=:id")
     void updateInviteStatus(@Param("id")long inviteId, @Param("status")Invite.Status status);
+
+//    @Query("select sg.id from SoloGame sg join GamePrototype gp on sg.prototype=gp")
+//    Long findGameIdForAcceptedGameInvite(
+//            @Param("gamePrototypeIdFromInvite") Long gamePrototypeIdFromInvite);
 }

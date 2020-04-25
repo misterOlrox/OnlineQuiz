@@ -1,11 +1,14 @@
 package com.olrox.quiz.service;
 
 import com.olrox.quiz.entity.GamePrototype;
+import com.olrox.quiz.entity.Invite;
 import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.entity.UserAnswer;
+import com.olrox.quiz.exception.IllegalGamePrototypeType;
 import com.olrox.quiz.process.SoloGameProcess;
 import com.olrox.quiz.repository.GamePrototypeRepository;
+import com.olrox.quiz.repository.InviteRepository;
 import com.olrox.quiz.repository.SoloGameRepository;
 import com.olrox.quiz.repository.UserAnswerRepository;
 import org.json.JSONArray;
@@ -32,6 +35,8 @@ public class SoloGameService {
     private UserAnswerRepository userAnswerRepository;
     @Autowired
     private GamePrototypeRepository gamePrototypeRepository;
+    @Autowired
+    private InviteRepository inviteRepository;
     @Autowired
     private GamePrototypeService prototypeService;
     @Autowired
@@ -123,10 +128,22 @@ public class SoloGameService {
         return soloGameRepository.findAllByParticipant(participant);
     }
 
-    public Long generateSharedSoloGame(User participant, Long prototypeId) {
+    public Long generatePublicSharedSoloGame(User participant,
+                                             Long prototypeId) throws IllegalGamePrototypeType {
         var prototype = gamePrototypeRepository.findById(prototypeId).orElseThrow();
+        if (prototype.getType() != GamePrototype.Type.SOLO_SHARED_PUBLIC) {
+            throw new IllegalGamePrototypeType(
+                    "Game prototype [" + prototype + "] isn't SOLO_SHARED_PUBLIC");
+        }
 
         return createSoloGameProcess(participant, prototype);
+    }
+
+    public Long generateGameFromInvite(Invite invite) {
+        invite.setStatus(Invite.Status.ACCEPTED);
+        invite = inviteRepository.save(invite);
+
+        return createSoloGameProcess(invite.getInvited(), invite.getGamePrototype());
     }
 
     public Optional<SoloGame> findGameAlreadyInProgress(User participant, Long prototypeId) {

@@ -63,23 +63,25 @@ public class InviteService {
     }
 
     public void declineInvite(long id, User user) throws InviteException {
-        Invite invite =  getInviteInProgress(id, user);
+        Invite invite =  getInvite(id, user);
+        if (invite.getStatus() != Invite.Status.IN_PROCESS) {
+            throw new InviteException(
+                    "Wrong status [" + invite.getStatus() + "] for invite with id " + id);
+        }
+
         invite.setStatus(Invite.Status.DECLINED);
 
         inviteRepository.save(invite);
     }
 
-    private Invite getInviteInProgress(long id, User user) throws InviteException {
+    public Invite getInvite(long id, User invited) throws InviteException {
         Invite invite = inviteRepository.findById(id).orElse(null);
         if (invite == null) {
             throw new InviteException(
                     "Invite with id " + id + " doesn't exists");
-        } else if (!invite.getInvited().equals(user)) {
+        } else if (!invite.getInvited().equals(invited)) {
             throw new InviteException(
-                    "Wrong user " + user + " for invite with id " + id);
-        } else if (invite.getStatus() != Invite.Status.IN_PROCESS) {
-            throw new InviteException(
-                    "Wrong status [" + invite.getStatus() + "] for invite with id " + id);
+                    "Wrong user " + invited + " for invite with id " + id);
         }
 
         return invite;
