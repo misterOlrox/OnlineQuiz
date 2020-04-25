@@ -74,7 +74,6 @@
                         </td>
                     </tr>
                 <#else>
-                    You haven't any prototypes
                 </#list>
             </#if>
             </tbody>
