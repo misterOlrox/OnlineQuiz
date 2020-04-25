@@ -39,8 +39,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/game/solo/**", "/api/invite/**").hasAuthority(Role.USER.name())
                 .antMatchers("/api/users/**").authenticated()
                 .antMatchers("/user/**").authenticated()
-                .antMatchers("/add-theme").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
                 .antMatchers("/add-prototype", "/add-question").authenticated()
+                .antMatchers("/add-theme").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
+                .antMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
                 .antMatchers("/sign-up").not().authenticated()
                 .anyRequest().authenticated()
 

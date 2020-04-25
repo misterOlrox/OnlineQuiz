@@ -2,7 +2,6 @@ package com.olrox.quiz.controller.general;
 
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.service.GamePrototypeService;
-import com.olrox.quiz.service.InviteService;
 import com.olrox.quiz.service.SoloGameService;
 import com.olrox.quiz.service.UserService;
 import com.olrox.quiz.service.UserStatsService;
@@ -26,8 +25,6 @@ public class UserController {
     private GamePrototypeService gamePrototypeService;
     @Autowired
     private UserStatsService userStatsService;
-    @Autowired
-    private InviteService inviteService;
     @Autowired
     private MyErrorController errorController;
 

@@ -10,15 +10,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -69,38 +65,8 @@ public class UserService implements UserDetailsService {
         return userRepository.save(newUser);
     }
 
-    public User addUser(User user) {
-        return userRepository.save(user);
-    }
-
     public List<User> findAll() {
         return userRepository.findAll();
-    }
-
-    public void saveUser(User user, String username, Map<String, String> form) {
-        user.setUsername(username);
-
-        Set<String> roles = Arrays.stream(Role.values())
-                .map(Role::name)
-                .collect(Collectors.toSet());
-
-        user.getRoles().clear();
-
-        for (String key : form.keySet()) {
-            if (roles.contains(key)) {
-                user.getRoles().add(Role.valueOf(key));
-            }
-        }
-
-        userRepository.save(user);
-    }
-
-    public void updateProfile(User user, String password, String email) {
-        if (!StringUtils.isEmpty(password)) {
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-
-        userRepository.save(user);
     }
 
     public Optional<User> findAdmin() {
