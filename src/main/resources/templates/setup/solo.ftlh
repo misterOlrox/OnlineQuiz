@@ -23,7 +23,8 @@
                     <div class="select">
                         <label>
                             <select name="time">
-                                <!-- For develop --><option value="0:03">0:03</option>
+                                <!-- For develop -->
+                                <option value="0:03">0:03</option>
                                 <option value="0:30">0:30</option>
                                 <option value="1:00">1:00</option>
                                 <option value="2:00">2:00</option>
@@ -56,30 +57,32 @@
 
             <div class="box" style="margin-top: 20px; background-color: hsl(160, 90%, 70%)">
                 <label class="label has-text-centered" for="time">Themes</label>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Theme name</th>
-                        <th>Selected</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    <#list themes as theme>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
                         <tr>
-                            <td>${theme.themeName}</td>
-                            <td>
-                                <div class="field">
-                                    <label class="checkbox">
-                                        <input type="checkbox" name="themeCheckbox" id="${theme.id}" checked>
-                                    </label>
-                                </div>
-                            </td>
+                            <th>Theme name</th>
+                            <th>Selected</th>
                         </tr>
+                        </thead>
+                        <tbody>
 
-                    </#list>
-                    </tbody>
-                </table>
+                        <#list themes as theme>
+                            <tr>
+                                <td>${theme.themeName}</td>
+                                <td>
+                                    <div class="field">
+                                        <label class="checkbox">
+                                            <input type="checkbox" name="themeCheckbox" id="${theme.id}" checked>
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </#list>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <input type="hidden" id="selectedThemes" name="selectedThemes"/>
             <#if selectedThemesError??>
