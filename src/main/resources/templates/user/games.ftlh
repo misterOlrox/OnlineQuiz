@@ -62,7 +62,6 @@
                     </td>
                 </tr>
             <#else>
-                You haven't any games
             </#list>
             </tbody>
         </table>

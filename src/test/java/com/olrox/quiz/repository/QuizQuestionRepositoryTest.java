@@ -15,6 +15,6 @@ class QuizQuestionRepositoryTest {
     @Disabled
     @Test
     void getQuestionIdsByThemes() {
-        System.out.println(quizQuestionRepository.getQuestionIdsByThemes(List.of(2L, 3L)));
+        System.out.println(quizQuestionRepository.getApprovedQuestionIdsByThemes(List.of(2L, 3L)));
     }
 }

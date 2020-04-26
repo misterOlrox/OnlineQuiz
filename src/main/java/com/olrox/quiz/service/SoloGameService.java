@@ -6,6 +6,7 @@ import com.olrox.quiz.entity.SoloGame;
 import com.olrox.quiz.entity.User;
 import com.olrox.quiz.entity.UserAnswer;
 import com.olrox.quiz.exception.IllegalGamePrototypeType;
+import com.olrox.quiz.exception.NoQuestionsException;
 import com.olrox.quiz.process.SoloGameProcess;
 import com.olrox.quiz.repository.GamePrototypeRepository;
 import com.olrox.quiz.repository.InviteRepository;
@@ -49,16 +50,16 @@ public class SoloGameService {
             Integer timeForQuestionInSeconds,
             Integer numberOfQuestions,
             List<Long> themesIds
-    ) {
+    ) throws NoQuestionsException {
 
-        var questions = quizQuestionService.findRandomQuestions(numberOfQuestions, themesIds);
+        var questions = quizQuestionService.findRandomAndApprovedQuestions(numberOfQuestions, themesIds);
         var foundSize = questions.size();
         if (foundSize != numberOfQuestions) {
             LOG.warn("Required questions: {}. Found: {}", numberOfQuestions, foundSize);
         }
         if (foundSize == 0) {
-            throw new RuntimeException(
-                    "Haven't any questions for themes " + new JSONArray(themesIds));
+            throw new NoQuestionsException(
+                    "Haven't any approved questions for themes " + new JSONArray(themesIds));
         }
 
         var prototype = prototypeService.createPrototype(

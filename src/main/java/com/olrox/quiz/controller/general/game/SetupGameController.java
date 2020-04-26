@@ -2,9 +2,12 @@ package com.olrox.quiz.controller.general.game;
 
 import com.olrox.quiz.entity.QuizQuestionTheme;
 import com.olrox.quiz.entity.User;
+import com.olrox.quiz.exception.NoQuestionsException;
 import com.olrox.quiz.service.QuizQuestionThemeService;
 import com.olrox.quiz.service.SoloGameService;
 import com.olrox.quiz.util.TimeUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,8 @@ import java.util.List;
 
 @Controller
 public class SetupGameController {
+
+    public static final Logger LOG = LoggerFactory.getLogger(SetupGameController.class);
 
     @Autowired
     private QuizQuestionThemeService quizQuestionThemeService;
@@ -64,17 +69,23 @@ public class SetupGameController {
         }
 
         if (hasErrors) {
-            List<QuizQuestionTheme> themes = quizQuestionThemeService.getAllThemes();
-            model.addAttribute("themes", themes);
-
-            return "setup/solo";
+            return getSetupSolo(model);
         } else {
 
-            var soloGame = soloGameService.generateRandomSoloGame(
-                    user,
-                    TimeUtil.getTimeInSecondsFromStringWithMinuteAndSecond(time),
-                    quantityOfQuestions,
-                    selectedThemes);
+            Long soloGame;
+            try {
+                soloGame = soloGameService.generateRandomSoloGame(
+                        user,
+                        TimeUtil.getTimeInSecondsFromStringWithMinuteAndSecond(time),
+                        quantityOfQuestions,
+                        selectedThemes);
+            } catch (NoQuestionsException e) {
+                model.addAttribute(
+                        "selectedThemesError",
+                        "No approved questions for selected themes"
+                );
+                return getSetupSolo(model);
+            }
 
             return "redirect:/play/solo/" + soloGame;
         }

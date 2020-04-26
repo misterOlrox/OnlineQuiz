@@ -41,6 +41,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**").authenticated()
                 .antMatchers("/add-prototype", "/add-question").authenticated()
                 .antMatchers("/add-theme").hasAnyAuthority(Role.ADMIN.name(), Role.MODERATOR.name())
+                .antMatchers("/moderator/**").hasAuthority(Role.MODERATOR.name())
                 .antMatchers("/admin/**").hasAuthority(Role.ADMIN.name())
                 .antMatchers("/sign-up").not().authenticated()
                 .anyRequest().authenticated()

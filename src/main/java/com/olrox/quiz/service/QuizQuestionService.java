@@ -7,6 +7,8 @@ import com.olrox.quiz.entity.WrongAnswer;
 import com.olrox.quiz.repository.QuizQuestionRepository;
 import com.olrox.quiz.repository.QuizQuestionThemeRepository;
 import com.olrox.quiz.util.RandomUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +19,10 @@ import java.util.Set;
 
 @Service
 public class QuizQuestionService {
+
+    public static final Logger LOG = LoggerFactory.getLogger(QuizQuestionService.class);
+
+    public static final int REQUIRED_APPROVALS = 3;
 
     @Autowired
     private QuizQuestionRepository quizQuestionRepository;
@@ -32,8 +38,7 @@ public class QuizQuestionService {
             boolean approved,
             QuizQuestionTheme theme
     ) {
-
-        QuizQuestion quizQuestion = getQuizQuestionWithFields(
+        QuizQuestion quizQuestion = constructQuizQuestion(
                 author,
                 question,
                 correctAnswer,
@@ -52,8 +57,7 @@ public class QuizQuestionService {
             List<WrongAnswer> wrongAnswers,
             boolean approved
     ) {
-
-        QuizQuestion quizQuestion = getQuizQuestionWithFields(
+        QuizQuestion quizQuestion = constructQuizQuestion(
                 author,
                 question,
                 correctAnswer,
@@ -71,9 +75,8 @@ public class QuizQuestionService {
             List<WrongAnswer> wrongAnswers,
             List<Long> selectedThemes
     ) {
-
         boolean approved = author.isAdmin();
-        QuizQuestion quizQuestion = getQuizQuestionWithFields(
+        QuizQuestion quizQuestion = constructQuizQuestion(
                 author,
                 question,
                 correctAnswer,
@@ -89,13 +92,13 @@ public class QuizQuestionService {
         return quizQuestionRepository.save(quizQuestion);
     }
 
-    private QuizQuestion getQuizQuestionWithFields(
+    private QuizQuestion constructQuizQuestion(
             User author,
             String question,
             String correctAnswer,
             List<WrongAnswer> wrongAnswers,
-            boolean approved) {
-
+            boolean approved
+    ) {
         QuizQuestion quizQuestion = new QuizQuestion();
         quizQuestion.setAuthor(author);
         quizQuestion.setQuestion(question);
@@ -108,11 +111,26 @@ public class QuizQuestionService {
         return quizQuestion;
     }
 
-    public List<QuizQuestion> findRandomQuestions(int number, List<Long> themesIds) {
-        var questionsIds = quizQuestionRepository.getQuestionIdsByThemes(themesIds);
+    public List<QuizQuestion> findRandomAndApprovedQuestions(int number, List<Long> themesIds) {
+        var questionsIds = quizQuestionRepository.getApprovedQuestionIdsByThemes(themesIds);
         var randomQuestionIds = RandomUtil.pickNRandomElements(questionsIds, number);
 
         return quizQuestionRepository.findAllById(randomQuestionIds);
+    }
+
+    public List<QuizQuestion> findUnapprovedQuestionsFor(User moderator) {
+        return quizQuestionRepository.findUnapprovedQuestionsFor(moderator);
+    }
+
+    public void approveQuestion(Long questionId, User moderator) {
+        QuizQuestion question = quizQuestionRepository.findById(questionId).get();
+        question.getApprovals().add(moderator);
+        if (question.getApprovals().size() >= REQUIRED_APPROVALS) {
+            LOG.info("Question with id [{}] has been approved", question.getId());
+            question.setApproved(true);
+        }
+
+        quizQuestionRepository.save(question);
     }
 
     public List<QuizQuestion> findAllById(List<Long> quizQuestionIds) {

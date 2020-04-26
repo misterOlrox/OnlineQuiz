@@ -55,6 +55,19 @@
                 </div>
             </#if>
 
+            <#if isModerator>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link" href="/moderator/questions-approvals">
+                        Moderator features
+                    </a>
+                    <div class="navbar-dropdown is-boxed">
+                        <a class="navbar-item" href="/moderator/questions-approvals">
+                            Approve questions
+                        </a>
+                    </div>
+                </div>
+            </#if>
+
             <div class="navbar-item has-dropdown is-hoverable">
                 <a class="navbar-link">
                     Quiz
