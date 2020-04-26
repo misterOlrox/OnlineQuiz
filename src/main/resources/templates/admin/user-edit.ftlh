@@ -14,38 +14,40 @@
         </div>
     </section>
 
-    <div class="container " style="width: 25%">
+    <div class="container " style="width: 50%">
         <form action="/admin/user-edit/" method="post">
             <div class="box" style="margin-top: 20px; background-color: hsl(171, 100%, 41%)">
                 <label class="label has-text-centered">${user.username}'s roles</label>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th class="has-text-right" style="width: 70%">Role</th>
-                        <th class="has-text-centered" style="width: 30%">Enabled</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    <#list roles as role>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
                         <tr>
-                            <td class="has-text-right">
-                                ${role}
-                            </td>
-                            <td class="has-text-centered">
-                                <div class="field">
-                                    <label class="checkbox">
-                                        <input type="checkbox"
-                                               name="${role}"
-                                                ${user.roles?seq_contains(role)?string("checked", "")}
-                                        >
-                                    </label>
-                                </div>
-                            </td>
+                            <th class="has-text-right" style="width: 70%">Role</th>
+                            <th class="has-text-centered" style="width: 30%">Enabled</th>
                         </tr>
-                    </#list>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+
+                        <#list roles as role>
+                            <tr>
+                                <td class="has-text-right">
+                                    ${role}
+                                </td>
+                                <td class="has-text-centered">
+                                    <div class="field">
+                                        <label class="checkbox">
+                                            <input type="checkbox"
+                                                   name="${role}"
+                                                    ${user.roles?seq_contains(role)?string("checked", "")}
+                                            >
+                                        </label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </#list>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             <#if success??>
                 <h4 class="help is-success has-text-centered">

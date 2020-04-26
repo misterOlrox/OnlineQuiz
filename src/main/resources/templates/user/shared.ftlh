@@ -37,47 +37,49 @@
                 margin-top: 2%"
     >
         <label class="label has-text-centered">Quiz Prototypes</label>
-        <table class="table is-bordered">
-            <thead>
-            <tr>
-                <th class="has-text-centered">Prototype id</th>
-                <th class="has-text-centered">Name</th>
-                <th class="has-text-centered">Number of questions</th>
-                <th class="has-text-centered">Time for question</th>
-                <th class="has-text-centered">Is private?</th>
-                <th class="has-text-centered">Invite others</th>
-            </tr>
-            </thead>
-            <tbody>
+        <div class="table-container">
+            <table class="table is-bordered">
+                <thead>
+                <tr>
+                    <th class="has-text-centered">Prototype id</th>
+                    <th class="has-text-centered">Name</th>
+                    <th class="has-text-centered">Number of questions</th>
+                    <th class="has-text-centered">Time for question</th>
+                    <th class="has-text-centered">Is private?</th>
+                    <th class="has-text-centered">Invite others</th>
+                </tr>
+                </thead>
+                <tbody>
 
-            <#if prototypes??>
-                <#list prototypes as prototype>
-                    <tr>
-                        <td class="has-text-centered">${prototype.id}</td>
-                        <td class="has-text-centered">${prototype.name}</td>
-                        <td class="has-text-centered">${prototype.numberOfQuestions}</td>
-                        <td class="has-text-centered">${prototype.timeForQuestionInSeconds} seconds</td>
-                        <td class="has-text-centered">
-                            <#assign type = prototype.type>
-                            <#if type == "SOLO_SHARED_PRIVATE">
-                                Yes
-                            <#elseif type == "SOLO_SHARED_PUBLIC">
-                                No
-                            <#else>
-                                Unknown
-                            </#if>
-                        </td>
-                        <td class="has-text-centered">
-                            <a onclick="inviteJS.showAvailableUsers(${prototype.id})" class="button is-link">
-                                Invite
-                            </a>
-                        </td>
-                    </tr>
-                <#else>
-                </#list>
-            </#if>
-            </tbody>
-        </table>
+                <#if prototypes??>
+                    <#list prototypes as prototype>
+                        <tr>
+                            <td class="has-text-centered">${prototype.id}</td>
+                            <td class="has-text-centered">${prototype.name}</td>
+                            <td class="has-text-centered">${prototype.numberOfQuestions}</td>
+                            <td class="has-text-centered">${prototype.timeForQuestionInSeconds} seconds</td>
+                            <td class="has-text-centered">
+                                <#assign type = prototype.type>
+                                <#if type == "SOLO_SHARED_PRIVATE">
+                                    Yes
+                                <#elseif type == "SOLO_SHARED_PUBLIC">
+                                    No
+                                <#else>
+                                    Unknown
+                                </#if>
+                            </td>
+                            <td class="has-text-centered">
+                                <a onclick="inviteJS.showAvailableUsers(${prototype.id})" class="button is-link">
+                                    Invite
+                                </a>
+                            </td>
+                        </tr>
+                    <#else>
+                    </#list>
+                </#if>
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <div class="container has-text-centered" style="margin-top: 5%">

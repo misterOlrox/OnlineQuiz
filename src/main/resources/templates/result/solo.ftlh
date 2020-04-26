@@ -43,25 +43,27 @@
 
     <div class="box" style="background-color: hsl(160, 90%, 70%);margin-left: 10%;margin-right: 10%;margin-top: 2%">
         <label class="label has-text-centered">Answers</label>
-        <table class="table is-bordered">
-            <thead>
-            <tr>
-                <th>Question</th>
-                <th>Your answer</th>
-                <th>Correct answer</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            <#list userAnswerList as userAnswer>
+        <div class="table-container">
+            <table class="table is-bordered">
+                <thead>
                 <tr>
-                    <td>${userAnswer.quizQuestion.question}</td>
-                    <td class="has-text-centered"><#if userAnswer.answer?has_content>${userAnswer.answer}<#else><i class="fa fa-times" aria-hidden="true"></i></#if></td>
-                    <td class="has-text-centered">${userAnswer.quizQuestion.correctAnswer}</td>
-                    <td class="has-text-centered">
-                        <#assign state = userAnswer.status.name()>
-                        <span class="tag is-medium
+                    <th>Question</th>
+                    <th>Your answer</th>
+                    <th>Correct answer</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <#list userAnswerList as userAnswer>
+                    <tr>
+                        <td>${userAnswer.quizQuestion.question}</td>
+                        <td class="has-text-centered"><#if userAnswer.answer?has_content>${userAnswer.answer}<#else><i
+                                    class="fa fa-times" aria-hidden="true"></i></#if></td>
+                        <td class="has-text-centered">${userAnswer.quizQuestion.correctAnswer}</td>
+                        <td class="has-text-centered">
+                            <#assign state = userAnswer.status.name()>
+                            <span class="tag is-medium
                                 <#if state == "CORRECT">
                                 is-success
                                 <#elseif state == "TIMEOUT">
@@ -70,13 +72,14 @@
                                 is-danger
                                 </#if>
                                 is-light"
-                        >
+                            >
                             ${userAnswer.status}
                         </span>
-                    </td>
-                </tr>
-            </#list>
-            </tbody>
-        </table>
+                        </td>
+                    </tr>
+                </#list>
+                </tbody>
+            </table>
+        </div>
     </div>
 </@c.page>

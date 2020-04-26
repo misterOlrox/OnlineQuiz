@@ -20,37 +20,39 @@
                 margin-top: 2%"
     >
         <label class="label has-text-centered">Quiz Prototypes</label>
-        <table class="table is-bordered">
-            <thead>
-            <tr>
-                <th class="has-text-centered">Name</th>
-                <th class="has-text-centered">Author</th>
-                <th class="has-text-centered">Number of questions</th>
-                <th class="has-text-centered">Time for question</th>
-                <th class="has-text-centered">Play</th>
-            </tr>
-            </thead>
-            <tbody>
+        <div class="table-container">
+            <table class="table is-bordered">
+                <thead>
+                <tr>
+                    <th class="has-text-centered">Name</th>
+                    <th class="has-text-centered">Author</th>
+                    <th class="has-text-centered">Number of questions</th>
+                    <th class="has-text-centered">Time for question</th>
+                    <th class="has-text-centered">Play</th>
+                </tr>
+                </thead>
+                <tbody>
 
-            <#if prototypes??>
-                <#list prototypes as prototype>
-                    <tr>
-                        <td class="has-text-centered">${prototype.name}</td>
-                        <td class="has-text-centered">${prototype.creator.username}</td>
-                        <td class="has-text-centered">${prototype.numberOfQuestions}</td>
-                        <td class="has-text-centered">${prototype.timeForQuestionInSeconds} seconds</td>
-                        <td class="has-text-centered">
-                            <a href="/play/public-shared/${prototype.id}" class="button is-success">
-                                <i class="fas fa-play" style="margin-right: 10px"></i>
-                                Play
-                            </a>
-                        </td>
-                    </tr>
-                <#else>
-                    There isn't any prototypes
-                </#list>
-            </#if>
-            </tbody>
-        </table>
+                <#if prototypes??>
+                    <#list prototypes as prototype>
+                        <tr>
+                            <td class="has-text-centered">${prototype.name}</td>
+                            <td class="has-text-centered">${prototype.creator.username}</td>
+                            <td class="has-text-centered">${prototype.numberOfQuestions}</td>
+                            <td class="has-text-centered">${prototype.timeForQuestionInSeconds} seconds</td>
+                            <td class="has-text-centered">
+                                <a href="/play/public-shared/${prototype.id}" class="button is-success">
+                                    <i class="fas fa-play" style="margin-right: 10px"></i>
+                                    Play
+                                </a>
+                            </td>
+                        </tr>
+                    <#else>
+                        There isn't any prototypes
+                    </#list>
+                </#if>
+                </tbody>
+            </table>
+        </div>
     </div>
 </@c.page>

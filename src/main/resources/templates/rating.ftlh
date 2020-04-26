@@ -20,28 +20,31 @@
                 margin-top: 2%"
     >
         <label class="label has-text-centered"><h2>Top</h2></label>
-        <table class="table is-bordered">
-            <thead>
-            <tr>
-                <th class="has-text-centered" style="width: 25%">Place</th>
-                <th class="has-text-centered" style="width: 50%">Name</th>
-                <th class="has-text-centered" style="width: 25%">${statType}</th>
-            </tr>
-            </thead>
-            <tbody>
+        <div class="table-container">
+            <table class="table is-bordered">
+                <thead>
+                <tr>
+                    <th class="has-text-centered" style="width: 25%">Place</th>
+                    <th class="has-text-centered" style="width: 50%">Name</th>
+                    <th class="has-text-centered" style="width: 25%">${statType}</th>
+                </tr>
+                </thead>
+                <tbody>
 
-            <#if userStats??>
-                <#list userStats as userStat>
-                    <tr>
-                        <td class="has-text-centered">${userStat?counter}</td>
-                        <td class="has-text-centered"><a href="/user/profile/${userStat.user.id}">${userStat.user.username}</a></td>
-                        <td class="has-text-centered">${userStat.value}</td>
-                    </tr>
-                <#else>
-                    Top is empty
-                </#list>
-            </#if>
-            </tbody>
-        </table>
+                <#if userStats??>
+                    <#list userStats as userStat>
+                        <tr>
+                            <td class="has-text-centered">${userStat?counter}</td>
+                            <td class="has-text-centered"><a
+                                        href="/user/profile/${userStat.user.id}">${userStat.user.username}</a></td>
+                            <td class="has-text-centered">${userStat.value}</td>
+                        </tr>
+                    <#else>
+                        Top is empty
+                    </#list>
+                </#if>
+                </tbody>
+            </table>
+        </div>
     </div>
 </@c.page>

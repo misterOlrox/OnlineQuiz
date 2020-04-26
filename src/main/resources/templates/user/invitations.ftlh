@@ -2,7 +2,7 @@
 <#include "../parts/security.ftlh">
 
 <#assign pageSpecificScripts = ["/static/js/invitationsPage.js"]
-    in c
+in c
 >
 
 <@c.page>
@@ -26,20 +26,22 @@
                 margin-top: 2%"
     >
         <label class="label has-text-centered">Invitations</label>
-        <table class="table is-bordered">
-            <thead>
-            <tr>
-                <th class="has-text-centered">From</th>
-                <th class="has-text-centered">Quiz name</th>
-                <th class="has-text-centered">Number of questions</th>
-                <th class="has-text-centered">Time for questions</th>
-                <th class="has-text-centered">Action</th>
-            </tr>
-            </thead>
+        <div class="table-container">
+            <table class="table is-bordered">
+                <thead>
+                <tr>
+                    <th class="has-text-centered">From</th>
+                    <th class="has-text-centered">Quiz name</th>
+                    <th class="has-text-centered">Number of questions</th>
+                    <th class="has-text-centered">Time for questions</th>
+                    <th class="has-text-centered">Action</th>
+                </tr>
+                </thead>
 
-            <tbody id="invite-table-body">
+                <tbody id="invite-table-body">
                 <!-- insert JS -->
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </div>
     </div>
 </@c.page>
